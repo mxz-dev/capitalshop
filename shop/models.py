@@ -24,6 +24,7 @@ class ProductCategories(models.Model):
 
 class Products(models.Model):
     name = models.CharField(max_length=250)
+    slug = models.SlugField(null=True, blank=True)
     image = models.ImageField(upload_to="uploads/shop/products/")
     description = models.TextField(max_length=550)
     price = models.DecimalField(max_digits=6, decimal_places=2)
@@ -33,6 +34,10 @@ class Products(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.name
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Products, self).save(*args, **kwargs)
     class Meta:
         verbose_name_plural = "Products"
 class Cart(models.Model):

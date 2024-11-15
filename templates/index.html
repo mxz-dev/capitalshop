@@ -14,27 +14,28 @@
             </div>
         </header>
         <!-- Section-->
-        <section class="py-5">
+        <section class="py-1">
             <div class="container px-4 px-lg-5 mt-5">
-                <h1>Latest Products </h1>
+                <h2 class="fw-bolder mb-4">Popular Products</h2>
+
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                     {% for product in products %}
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
-                            <img class="card-img-top" src="{{product.image.url}}" style="max-height:250px;" alt="image for {{product.name}}" />
+                            <img class="card-img-top" src="{{product.image.url}}" style="height:220px;" alt="image for {{product.name}}" />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
                                     <h5 class="fw-bolder">{{product.name}}</h5>
                                     <!-- Product price-->
-                                    {{product.price}}$
+                                    ${{product.price}}
                                 </div>
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'shop:shopitem' slug=product.slug %}">View Product</a></div>
                             </div>
                         </div>
                     </div>
@@ -42,9 +43,26 @@
                 </div>
             </div>
         </section>
-        {% comment %} <section class="py-5">
+        <section class="py-5 bg-light">
             <div class="container px-4 px-lg-5 mt-5">
-                <h1>Latest Posts From Mag </h1>        
+                <h2 class="fw-bolder mb-4">Latest Posts</h2>
+                    <div class="row">
+                        <!-- Blog entries-->
+                         {% for post in posts %}
+                        <div class="col-lg-5">
+                            <!-- Featured blog post-->
+                            <div class="card mb-4">
+                                <a href="#!"><img class="card-img-top" style="height:350px;" src="{{post.image.url}}" alt="image for {{post.subject}}" /></a>
+                                <div class="card-body">
+                                    <div class="small text-muted">{{post.publish_date|date:"D d M Y"}}</div>
+                                    <h3 class="card-title">{{post.subject}}</h3>
+                                    <p class="card-text">{{post.content|truncatewords:15}}</p>
+                                    <a class="btn btn-primary" href="#!">Read more →</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
             </div>
-        </section> {% endcomment %}
+        </section>
 {% endblock content%}

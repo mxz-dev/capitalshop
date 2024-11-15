@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User 
+from django.utils.text import slugify
 class PostCategories(models.Model):
     category_name = models.CharField(max_length=60)
     slug = models.SlugField(null=True, blank=True)
@@ -30,7 +31,7 @@ class Post(models.Model):
     content = models.TextField()
     image = models.ImageField(upload_to="uploads/mag/posts/")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    views = models.PositiveIntegerField()
+    views = models.PositiveIntegerField(default=1)
     tags = models.ManyToManyField(PostTags, related_name="tags")
     category = models.ForeignKey(PostCategories, on_delete=models.CASCADE) 
     is_published = models.BooleanField(default=False)
