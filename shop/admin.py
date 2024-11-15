@@ -14,7 +14,7 @@ class CartAdmin(admin.ModelAdmin):
 
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
-    list_filter = ['category', 'discount_type']
+    list_filter = ['category']
     search_fields = ['name', 'description']
     ordering = ['created_at']
     empty_value_display = '-empty-'

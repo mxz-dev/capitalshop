@@ -2,10 +2,7 @@ from django.db import models
 from accounts.models import CustomUser
 from django.utils.text import slugify
 
-DISCOUNT_TYPE = (
-    ("season", "off by season"),
-    ("off", "only one left"),
-)
+
 STATUS = (
     ("ordered", "ordered"),
     ("active", "active"),
@@ -30,8 +27,6 @@ class Products(models.Model):
     image = models.ImageField(upload_to="uploads/shop/products/")
     description = models.TextField(max_length=550)
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    discount_type = models.CharField(choices=DISCOUNT_TYPE, max_length=10)
-    discount_value = models.DecimalField(max_digits=4, decimal_places=2)
     category = models.ForeignKey(ProductCategories, on_delete=models.CASCADE, related_name="products")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
