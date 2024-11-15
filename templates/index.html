@@ -17,7 +17,6 @@
         <section class="py-1">
             <div class="container px-4 px-lg-5 mt-5">
                 <h2 class="fw-bolder mb-4">Popular Products</h2>
-
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                     {% for product in products %}
                     <div class="col mb-5">
@@ -27,9 +26,9 @@
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
-                                    <!-- Product name-->
+                                    <!-- Product name -->
                                     <h5 class="fw-bolder">{{product.name}}</h5>
-                                    <!-- Product price-->
+                                    <!-- Product price -->
                                     ${{product.price}}
                                 </div>
                             </div>

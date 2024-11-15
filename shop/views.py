@@ -1,6 +1,7 @@
 from django.shortcuts import render , get_object_or_404
 from shop.models import Products, ProductCategories
 from mag.models import Post
+from django.db.models import Q
 from django.utils.timezone import now
 
 def home_view(request):
@@ -9,6 +10,8 @@ def home_view(request):
     return render(request, 'index.html' , {"products":products, "posts":posts})
 def shop_view(request):
     products = Products.objects.filter(in_stock=True).order_by('-created_at')
+    if q := request.GET.get('s'):
+        products = Products.objects.filter(Q(description__contains=q) | Q(name__contains=q) , in_stock=True).order_by('-created_at')
     return render(request, 'shop/shop.html', {'products':products})
 def shopitem_view(request, slug):
     product = get_object_or_404(Products, in_stock=True, slug=slug)

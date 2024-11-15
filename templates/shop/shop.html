@@ -16,14 +16,15 @@
         <!-- Section-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
+                <form action="{% url 'shop:shop' %}" method="GET" >
                 <div class="input-group mb-3 w-100">
-                    <input type="text" class="form-control"  id="searchField" placeholder="search in products ..." aria-label="search" aria-describedby="basic-addon2">
+                    <input type="text" name="s" class="form-control"  id="searchField" placeholder="search in products ..." aria-label="search" aria-describedby="basic-addon2">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-primary" type="button"><i class="bi bi-search"></i></button>
+                      <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
                     </div>
                   </div>
+                </form>
                   <h2 class="fw-bolder mb-4">Products</h2>
-
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                     {% for product in products %}
                     <div class="col mb-5">
