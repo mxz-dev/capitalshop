@@ -27,6 +27,7 @@ class PostTags(models.Model):
         
 class Post(models.Model):
     slug = models.SlugField(null=True, blank=True)
+    pin = models.BooleanField(default=False)
     subject = models.CharField(max_length=256)
     content = models.TextField()
     image = models.ImageField(upload_to="uploads/mag/posts/")
@@ -45,4 +46,9 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.subject)
+        # my solution for pin an article is:
+        # check if an article is already pinned, first remove the older article and pin the new article 
+        if self.pin == True:
+            Post.objects.filter(pin=True, is_published=True).update(pin=False)
+            self.pin = True
         super(Post, self).save(*args, **kwargs)
