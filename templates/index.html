@@ -53,7 +53,7 @@
                             <div class="card mb-4">
                                 <a href="#!"><img class="card-img-top" style="height:350px;" src="{{post.image.url}}" alt="image for {{post.subject}}" /></a>
                                 <div class="card-body">
-                                    <div class="small text-muted">{{post.publish_date|date:"D d M Y"}}</div>
+                                    <div class="small text-muted">{{post.publish_at|date:"d M Y"}}</div>
                                     <h3 class="card-title">{{post.subject}}</h3>
                                     <p class="card-text">{{post.content|truncatewords:15}}</p>
                                     <a class="btn btn-primary" href="#!">Read more →</a>

@@ -1,0 +1,18 @@
+{% load mag_tags %}
+<div class="card mb-4">
+    <div class="card-header">Popular Posts</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-9 p-2 w-100">
+                <ul class="list-unstyled mb-0">
+                    {% for post in posts %}
+                    <li> 
+                        <img class="img-latest rounded" src="{{post.image.url}}" />
+                        <a href="{% url 'mag:post' slug=post.slug %}">{{post.subject}} </a><span class="small text-muted">{{post.views}} views</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
