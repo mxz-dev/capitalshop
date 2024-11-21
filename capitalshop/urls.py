@@ -7,7 +7,8 @@ urlpatterns = [
     path('', include('shop.urls')),
     path('mag/', include('mag.urls')),
     path('accounts/', include('accounts.urls')),
-    path('summernote/', include('django_summernote.urls'))
+    path('summernote/', include('django_summernote.urls')),
+    path('captcha', include('captcha.urls'))
 ]
 
 # static and media url 

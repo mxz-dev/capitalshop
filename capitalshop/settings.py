@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_summernote',
+    'captcha',
     'phonenumber_field',
     'accounts.apps.AccountsConfig',
     'shop.apps.ShopConfig',

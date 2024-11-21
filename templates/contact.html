@@ -3,28 +3,45 @@
 Contact Us
 {% endblock title %}
 {% block content %}
-
     <!-- Contact Us Section -->
     <div class="container mt-5">
         <h1 class="text-center mb-4">Contact Us</h1>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form>
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}}" role="alert">
+                    {{message}}
+                </div>
+                {%endfor%}
+                {% for field in form %}
+                {% for error in field.errors %}
+                <div class="alert alert-danger" role="alert">
+                        {{error}}
+                    </div>
+                {%endfor%}
+                {% endfor %}
+                <form action="{% url 'shop:contact' %}" method="POST">
                     <div class="mb-3">
                         <label for="name" class="form-label">Your Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="mb-3">
+                    {% csrf_token %}   
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" required>
                     </div>
                     <div class="mb-3">
                         <label for="subject" class="form-label">Subject</label>
-                        <input type="text" class="form-control" id="subject" placeholder="Enter subject" required>
+                        <input type="text" name="subject" class="form-control" id="subject" placeholder="Enter subject" required>
                     </div>
                     <div class="mb-3">
                         <label for="message" class="form-label">Message</label>
-                        <textarea class="form-control" id="message" rows="5" placeholder="Write your message" required></textarea>
+                        <textarea class="form-control" name="message" id="message" rows="5" placeholder="Write your message" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        {{form.captcha}}
                     </div>
                     <div class="text-center mb-5">
                         <button type="submit" class="btn btn-primary">Send Message</button>
