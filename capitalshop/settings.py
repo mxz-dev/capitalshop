@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_summernote',
     'phonenumber_field',
     'accounts.apps.AccountsConfig',
     'shop.apps.ShopConfig',
@@ -103,7 +104,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+# SUMMERNOTE CONFIG
+SUMMERNOTE_THEME = 'bs4' 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 

@@ -1,0 +1,154 @@
+/* General Article Styles */
+article {
+    line-height: 1.8;
+    color: #333;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+article:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Headings */
+article h1, article h2, article h3, article h4 {
+    color: #1a1a1a;
+    margin: 1em 0 0.5em;
+    line-height: 1.2;
+}
+
+article h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    border-bottom: 2px solid #eaeaea;
+    padding-bottom: 10px;
+}
+
+article h2 {
+    font-size: 2rem;
+    margin-top: 1.5em;
+}
+
+article h3 {
+    font-size: 1.5rem;
+    color: #555;
+}
+
+/* Paragraphs */
+article p {
+    margin: 1em 0;
+    text-align: justify;
+}
+
+/* Links */
+article a {
+    color: #0077cc;
+    text-decoration: none;
+    border-bottom: 1px dashed #0077cc;
+}
+
+article a:hover {
+    color: #005fa3;
+    border-bottom: 1px solid #005fa3;
+}
+
+/* Images */
+article img {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Quotes */
+article blockquote {
+    border-left: 4px solid #0077cc;
+    background-color: #f9f9f9;
+    padding: 10px 20px;
+    font-style: italic;
+    color: #555;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+/* Lists */
+article ul, article ol {
+    margin: 20px 0;
+    padding-left: 40px;
+}
+
+article ul li {
+    list-style-type: disc;
+}
+
+article ol li {
+    list-style-type: decimal;
+}
+
+/* Code Blocks */
+article pre {
+    background-color: #282c34;
+    color: #abb2bf;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    margin: 20px 0;
+}
+
+article code {
+    background-color: #f4f4f4;
+    color: #c7254e;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+}
+
+/* Tables */
+article table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+}
+
+article table th, article table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+article table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    article {
+        padding: 15px;
+    }
+
+    article h1 {
+        font-size: 2rem;
+    }
+
+    article h2 {
+        font-size: 1.75rem;
+    }
+
+    article h3 {
+        font-size: 1.25rem;
+    }
+}
