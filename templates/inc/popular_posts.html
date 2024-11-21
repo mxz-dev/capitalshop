@@ -8,7 +8,7 @@
                     {% for post in posts %}
                     <li> 
                         <img class="img-latest rounded" src="{{post.image.url}}" />
-                        <a href="{% url 'mag:post' slug=post.slug %}">{{post.subject}} </a><span class="small text-muted">{{post.views}} views</span>
+                        <a href="{% url 'mag:post' slug=post.slug %}">{{post.subject}} </a><span class="small text-muted">{{post.views}} view</span>
                     </li>
                     {% endfor %}
                 </ul>

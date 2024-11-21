@@ -6,9 +6,7 @@
         margin-right:10px;
         margin-bottom:10px;
         width:50px;
-        
     }
-    
 </style>
 {% endblock head %}
 {% block title %}
@@ -19,24 +17,13 @@ Blog
             <div class="container">
                 <div class="text-center my-5">
                     <h1 class="fw-bolder">Welcome to CapitalShop Blog</h1>
-                    <p class="lead mb-0">Where we are share the experince's</p>
+                    <p class="lead mb-0">we are share the our experinces here.</p>
                 </div>
             </div>
         </header>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                     {% if pin_post %}
-                    <div class="card mb-4">
-                        <a href="{% url 'mag:post' slug=pin_post.slug %}"><img class="card-img-top" style="height:450px;" src="{{pin_post.image.url}}" alt="image for {{pin_post.subject}}" /></a>
-                        <div class="card-body">
-                            <div class="small text-muted">{{pin_post.publish_at|date:"d M Y"}}</div>
-                            <h2 class="card-title">{{pin_post.subject}}</h2>
-                            <p class="card-text">{{pin_post.content|truncatewords:15}}</p>
-                            <a class="btn btn-primary" href="{% url 'mag:post' slug=pin_post.slug %}">Read more →</a>
-                        </div>
-                    </div>
-                    {%endif%}
                     <div class="row">
                         {% for posts in page_obj %}
                         <div class="col-lg-6">
