@@ -13,4 +13,4 @@ class CustomAuthenticationForm(AuthenticationForm):
     captcha = CaptchaField()
     class Meta:
         model = CustomUser
-        fields = ("password1", "password2", "email","firstname","lastname","address")
+        fields = ("username", "password")
