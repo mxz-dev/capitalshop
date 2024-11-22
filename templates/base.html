@@ -15,6 +15,42 @@
         <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet" />
         {% block head%}
         {% endblock head %}
+        <style>
+            /* General Styling */
+            .captcha-container {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .captcha {
+                max-height: 60px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                background-color: #f8f9fa;
+            }
+            
+            /* Input Styling */
+            #id_captcha_1{
+                flex: 1;
+                padding: 5px;
+                font-size: 16px;
+                width:70%;
+                margin-left:11%;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            }
+            
+            /* Focus State for Input */
+            #id_captcha_1:focus {
+                border-color: #80bdff;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+                outline: none;
+            }
+            
+        </style>
     </head>
     <body>
         <!-- Navigation-->
@@ -48,9 +84,23 @@
                 </div>
             </div>
         </nav>
-
+        <div class="container w-25 mt-5">
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}}" role="alert">
+            {{message}}
+        </div>
+        {%endfor%}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <div class="alert alert-danger" role="alert">
+                {{error}}
+            </div>
+        {%endfor%}
+        {% endfor %}
+        </div>
 {% block content %}
 {% endblock %}
+
                 <!-- Footer-->
                 <footer class="py-5 bg-dark">
                     <div class="container"><p class="m-0 text-center text-white">Copyright &copy; CapitalShop 2023</p></div>
