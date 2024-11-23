@@ -3,15 +3,16 @@ from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.urls import reverse
+from .backends.auth_backend import AuthBackend
 # Create your views here.
 def login_view(request):
     form = CustomAuthenticationForm()
     if request.method == "POST":
-        form = CustomAuthenticationForm(request=request,data=request.POST)
+        form = CustomAuthenticationForm(data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=password)
+            user = AuthBackend().authenticate(request, username=username, password=password)
             messages.add_message(request, messages.SUCCESS, 'Registration Complete. Check Your Inbox.')
         else:
             print(form.error_messages)
