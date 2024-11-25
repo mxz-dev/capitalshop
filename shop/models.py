@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import CustomUser
+from django.contrib.auth.models import User
 from django.utils.text import slugify
 
 
@@ -41,7 +41,7 @@ class Products(models.Model):
     class Meta:
         verbose_name_plural = "Products"
 class Cart(models.Model):
-    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="carts")
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="carts")
     status = models.CharField(choices=STATUS, max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -61,7 +61,7 @@ class CartItem(models.Model):
     class Meta:
         verbose_name_plural = "Cart Items"
 class Orders(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name_plural = "Orders"
@@ -77,7 +77,7 @@ class Wishlist(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Reviews(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reviews")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="reviews")
     comment = models.CharField(max_length=300)
     is_approved = models.BooleanField(default=False)

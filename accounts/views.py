@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm
 from django.contrib import messages
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.urls import reverse
-from .backends.auth_backend import AuthBackend
+
 # Create your views here.
 def login_view(request):
     form = CustomAuthenticationForm()
@@ -12,11 +13,13 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
-            user = AuthBackend().authenticate(request, username=username, password=password)
-            messages.add_message(request, messages.SUCCESS, 'Registration Complete. Check Your Inbox.')
-        else:
-            print(form.error_messages)
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                messages.add_message(request, messages.SUCCESS, 'Login Was Successful')
+
     return render(request, 'accounts/login.html', {'form':form})
+
 def registration_view(request):
     form = CustomUserCreationForm()
     if request.method == "POST":
