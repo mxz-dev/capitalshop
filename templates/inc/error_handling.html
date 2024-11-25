@@ -1,0 +1,11 @@
+{% for message in messages %}
+<div class="alert {% if message.tags == "ERROR"%}alert-danger{%else%}alert-{{message.tags}}{%endif%}" role="alert">
+    {{message}}
+</div>
+{%endfor%}
+
+{% for key, val in form.errors.items %}
+    <div class="alert alert-danger" role="alert">
+        {{val}}
+    </div>
+{% endfor %}

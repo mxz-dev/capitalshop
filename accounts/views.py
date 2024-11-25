@@ -7,18 +7,21 @@ from django.urls import reverse
 
 # Create your views here.
 def login_view(request):
-    form = CustomAuthenticationForm()
-    if request.method == "POST":
-        form = CustomAuthenticationForm(data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(request, username=username, password=password)
-            if user:
-                login(request, user)
-                messages.add_message(request, messages.SUCCESS, 'Login Was Successful')
-
-    return render(request, 'accounts/login.html', {'form':form})
+    if request.user.is_authenticated != True: 
+        form = CustomAuthenticationForm()
+        if request.method == "POST":
+            form = CustomAuthenticationForm(request=request,data=request.POST)
+            if form.is_valid():
+                username = form.cleaned_data.get("username")
+                password = form.cleaned_data.get("password")
+                user = authenticate(request, username=username, password=password)
+                if user:
+                    login(request, user)
+                    messages.add_message(request, messages.SUCCESS, 'Login Was Successful')
+                    return redirect(reverse("shop:home"))
+        return render(request, 'accounts/login.html', {'form':form})
+    else:
+        return redirect(reverse("shop:home"))
 
 def registration_view(request):
     form = CustomUserCreationForm()

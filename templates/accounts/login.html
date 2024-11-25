@@ -9,6 +9,7 @@
                     <h4>Login</h4>
                 </div>
                 <div class="card-body">
+                    {% include 'inc/error_handling.html' %}
                     <form method="POST" action="{% url 'accounts:login' %}">
                         {% csrf_token %}
                         <!-- Email/Username Input -->
