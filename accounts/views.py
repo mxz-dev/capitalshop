@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-# Create your views here.
 def login_view(request):
     if request.user.is_authenticated != True: 
         form = CustomAuthenticationForm()
@@ -18,7 +17,6 @@ def login_view(request):
                 user = authenticate(request, username=username, password=password)
                 if user:
                     login(request, user)
-                    messages.add_message(request, messages.SUCCESS, 'Login Was Successful')
                     return redirect(reverse("shop:home"))
         return render(request, 'accounts/login.html', {'form':form})
     else:

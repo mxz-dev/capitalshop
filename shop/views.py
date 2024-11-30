@@ -18,7 +18,8 @@ def shopitem_view(request, slug):
     product = get_object_or_404(Products, in_stock=True, slug=slug)
     return render(request, 'shop/shop-item.html', {"product": product} )
 def about_view(request):
-    return render(request, 'about.html' )
+    return render(request, 'about.html')
+
 def contact_view(request):
     form = ContactForm()
     if request.method == "POST":
