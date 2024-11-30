@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse
 
@@ -32,3 +33,8 @@ def registration_view(request):
             messages.add_message(request, messages.SUCCESS, 'Registration Complete. Check Your Inbox.')
             return redirect(reverse("accounts:login"))
     return render(request, 'accounts/registration.html', {"form":form})
+
+@login_required()
+def signout(request):
+    logout(request)
+    return redirect(reverse("accounts:login"))
