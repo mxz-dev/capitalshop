@@ -27,6 +27,7 @@ class Products(models.Model):
     slug = models.SlugField(null=True, blank=True)
     image = models.ImageField(upload_to="uploads/shop/products/")
     description = models.TextField(max_length=550)
+    stock_count = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     category = models.ForeignKey(ProductCategories, on_delete=models.CASCADE, related_name="products")
     in_stock = models.BooleanField(default=True)
@@ -37,6 +38,8 @@ class Products(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+        if self.stock_count < 1:
+            self.in_stock = False
         super(Products, self).save(*args, **kwargs)
     class Meta:
         verbose_name_plural = "Products"
@@ -46,7 +49,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
-        return f'Cart by {self.created_by.get_full_name}'
+        return f'Cart by {self.created_by.username}'
     class Meta:
         verbose_name_plural = "Cart"
 
@@ -57,7 +60,7 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return f'Cart Items by {self.cart.created_by.get_full_name}'
+        return f'Cart Items by {self.cart.created_by.username} [{self.product.name}]'
     class Meta:
         verbose_name_plural = "Cart Items"
 class Orders(models.Model):

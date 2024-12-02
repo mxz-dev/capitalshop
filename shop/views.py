@@ -1,4 +1,4 @@
-from django.shortcuts import render , get_object_or_404, HttpResponse
+from django.shortcuts import render , get_object_or_404, redirect, reverse
 from shop.models import Products, ProductCategories, Cart, CartItem
 from shop.forms import ContactForm
 from mag.models import Post
@@ -37,23 +37,26 @@ def cart_view(request):
     pass
 @login_required
 def add_to_cart_view(request, product, quantity):
+    if quantity < 1 or quantity > 200: quantity = 1
     user = User.objects.get(username=request.user)
     try:
-        cart = Cart.objects.get(created_by=user.id)
-        print(cart.id)
+        cart, created = Cart.objects.get_or_create(created_by=user, status="active")
+        item = get_object_or_404(Products,id=product, in_stock=True)
+        cart_item = CartItem.objects.filter(cart=cart, product=item).first()
+        if cart_item:
+            if quantity > item.stock_count:
+                cart_item.quantity = item.stock_count
+            else:
+                cart_item.quantity += quantity
+            cart_item.save()
+        else:
+            cart_item = CartItem.objects.create(cart=cart, product=item, price=item.price, quantity=quantity)
+        
+    except Exception as e:
+        return 
+    return redirect(reverse("shop:home"))
 
-        product = Products.objects.get(id=product, in_stock=True)
-    # if not cart:
-    except:
-        cart = Cart.objects.create(created_by=user, status="active")
-        print(cart)
-    try:
-        cart_item = CartItem.objects.create(cart=cart, product=product, price=product.price, quantity=quantity)
-        print(cart_item)
-    
-    except:
-        print(cart_item)
-    return HttpResponse("done")
+
 @login_required
 def remove_from_cart_view(request):
     pass

@@ -15,13 +15,11 @@
                         </div>
                         <p class="lead">{{product.description}}</p>
                         <div class="d-flex">
-                                <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
-                                <a href="{% url 'shop:add_to_cart' product=product.id quantity=1 %}">
-                                <button class="btn btn-outline-dark flex-shrink-0" type="button">
+                                <input class="form-control text-center me-3" id="inputQuantity" min="1" type="num" value="1" style="max-width: 3rem" />
+                                <button class="btn btn-outline-dark flex-shrink-0" type="button"  onclick="addToCart('{{ product.id }}')">
                                     <i class="bi-cart-fill me-1"></i>
                                     Add to cart
                                 </button>
-                            </a>
                         </div>
                         
                     </div>
@@ -30,4 +28,11 @@
         </section>
         <!-- Related items section-->
         {% show_related_products slug=product.slug %}
+        <script>
+            function addToCart(productItem) {
+                const quantity = document.getElementById('inputQuantity').value;
+                const url = `/cart/add/${productItem}/${quantity}`;
+                window.location.href = url;  // Redirect to the constructed URL
+            }
+        </script>
 {%endblock content%}
