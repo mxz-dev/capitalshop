@@ -37,23 +37,21 @@ def cart_view(request):
     pass
 @login_required
 def add_to_cart_view(request, product, quantity):
-    if quantity < 1 or quantity > 200: quantity = 1
-    user = User.objects.get(username=request.user)
-    try:
-        cart, created = Cart.objects.get_or_create(created_by=user, status="active")
-        item = get_object_or_404(Products,id=product, in_stock=True)
-        cart_item = CartItem.objects.filter(cart=cart, product=item).first()
-        if cart_item:
-            if quantity > item.stock_count:
-                cart_item.quantity = item.stock_count
-            else:
-                cart_item.quantity += quantity
-            cart_item.save()
+    if quantity < 1: quantity = 1
+    user = request.user
+    cart, created = Cart.objects.get_or_create(created_by=user, status="active")
+    item = get_object_or_404(Products, id=product, in_stock=True)
+    cart_item = CartItem.objects.filter(cart=cart, product=item).first()
+    if cart_item:
+        # condition for checking the quantity user provieded, less then the in stock volume
+        if cart_item.quantity + quantity > item.stock_count:
+            cart_item.quantity = item.stock_count
         else:
-            cart_item = CartItem.objects.create(cart=cart, product=item, price=item.price, quantity=quantity)
-        
-    except Exception as e:
-        return 
+            cart_item.quantity += quantity
+        cart_item.save()
+    else:
+        quantity = min(quantity, item.stock_count)
+        cart_item = CartItem.objects.create(cart=cart, product=item, price=item.price, quantity=quantity)
     return redirect(reverse("shop:home"))
 
 
