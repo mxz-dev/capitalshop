@@ -36,6 +36,7 @@ def contact_view(request):
 @login_required
 def cart_view(request):
     pass
+
 @login_required
 def add_item_to_cart(request, product, quantity):
     user = request.user
