@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Your Shopping Cart</h1>
+
+    {% if cart_items %}
+    <div class="row g-3">
+        {% for item in cart_items %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <img src="{{ item.product.image.url }}" class="card-img-top" alt="{{ item.product.name }}" style="height: 300px; object-fit: cover;">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ item.product.name }}</h5>
+                    <p class="card-text text-muted">${{ item.product.price }}</p>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="updateQuantity({{ item.product.id }}, -1)">-</button>
+                            <input type="text" class="form-control text-center" value="{{ item.quantity }}" readonly>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="updateQuantity({{ item.product.id }}, 1)">+</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger btn-sm mt-auto" onclick="removeItem({{ item.product.id }})">Remove</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row mt-4">
+        <div class="col text-end">
+            <h4>Total: ${{ total_price|floatformat:2 }}</h4>
+            <a href="" class="btn btn-success">Proceed to Checkout</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        Your cart is empty. <a href="{% url 'shop:shop' %}">Continue Shopping</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function updateQuantity(productId, change) {
+        const url = `/cart/update/${productId}/${change}`;
+        fetch(url, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    location.reload(); // Refresh the page to reflect changes
+                }
+            });
+    }
+
+    function removeItem(productId) {
+        const url = `/cart/remove/${productId}`;
+        fetch(url, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    location.reload(); // Refresh the page to reflect changes
+                }
+            });
+    }
+</script>
+{% endblock %}

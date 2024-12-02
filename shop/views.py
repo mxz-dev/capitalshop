@@ -35,7 +35,16 @@ def contact_view(request):
 
 @login_required
 def cart_view(request):
-    pass
+    user = request.user
+    cart = get_object_or_404(Cart,created_by=user, status="active")
+    cart_item = CartItem.objects.filter(cart=cart)
+    total_price = 0
+    for item in cart_item:
+        if item.quantity > 1:
+            total_price += item.quantity * item.price 
+        else:
+            total_price += item.price 
+    return render(request,'shop/cart.html', {"cart_items":cart_item, "total_price":total_price})
 
 @login_required
 def add_item_to_cart(request, product, quantity):
@@ -59,8 +68,8 @@ def add_item_to_cart(request, product, quantity):
         # Ensure the requested quantity does not exceed stock availability
         quantity = min(quantity, item.stock_count)
         cart_item = CartItem.objects.create(cart=cart, product=item, price=item.price, quantity=quantity)
-    return redirect(reverse("shop:home"))
-
+    messages.add_message(request, messages.SUCCESS, f"{cart_item.product.name} added to cart.")
+    return redirect(reverse("shop:shopitem", kwargs={'slug':item.slug}))
 
 @login_required
 def remove_item(request, product):
@@ -74,8 +83,10 @@ def remove_item(request, product):
 
     # Remove the item from the cart
     cart_item.delete()
+    return JsonResponse({
+        "message": "item removed from cart.",
+     })
 
-    return HttpResponse("DONE")
 
 @login_required
 def update_cart_item_quantity(request, product, quantity):
