@@ -1,4 +1,4 @@
-from django.shortcuts import render , get_object_or_404, redirect, reverse
+from django.shortcuts import render , get_object_or_404, redirect, reverse, HttpResponse
 from shop.models import Products, ProductCategories, Cart, CartItem
 from shop.forms import ContactForm
 from mag.models import Post
@@ -40,21 +40,38 @@ def add_to_cart_view(request, product, quantity):
     if quantity < 1: quantity = 1
     user = request.user
     cart, created = Cart.objects.get_or_create(created_by=user, status="active")
+
+    # Ensure the product exists and is in stock
     item = get_object_or_404(Products, id=product, in_stock=True)
+
+    # Check if the item is already in the cart
     cart_item = CartItem.objects.filter(cart=cart, product=item).first()
+
     if cart_item:
-        # condition for checking the quantity user provieded, less then the in stock volume
+        # Check if the requested quantity exceeds stock availability
         if cart_item.quantity + quantity > item.stock_count:
             cart_item.quantity = item.stock_count
         else:
             cart_item.quantity += quantity
         cart_item.save()
     else:
+        # Ensure the requested quantity does not exceed stock availability
         quantity = min(quantity, item.stock_count)
         cart_item = CartItem.objects.create(cart=cart, product=item, price=item.price, quantity=quantity)
     return redirect(reverse("shop:home"))
 
 
 @login_required
-def remove_from_cart_view(request):
-    pass
+def remove_from_cart_view(request, product):
+    user = request.user # get current user
+    
+    # ensure cart is exists.
+    cart = get_object_or_404(Cart, created_by=user)
+
+    # Find the item to remove from the cart
+    cart_item = get_object_or_404(CartItem, cart=cart, product=product)
+
+    # Remove the item from the cart
+    cart_item.delete()
+
+    return HttpResponse("DONE")
