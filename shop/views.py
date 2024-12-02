@@ -3,6 +3,7 @@ from shop.models import Products, ProductCategories, Cart, CartItem
 from shop.forms import ContactForm
 from mag.models import Post
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.db.models import Q
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
@@ -37,7 +38,6 @@ def cart_view(request):
     pass
 @login_required
 def add_to_cart_view(request, product, quantity):
-    if quantity < 1: quantity = 1
     user = request.user
     cart, created = Cart.objects.get_or_create(created_by=user, status="active")
 
@@ -64,7 +64,7 @@ def add_to_cart_view(request, product, quantity):
 @login_required
 def remove_from_cart_view(request, product):
     user = request.user # get current user
-    
+
     # ensure cart is exists.
     cart = get_object_or_404(Cart, created_by=user)
 
@@ -75,3 +75,29 @@ def remove_from_cart_view(request, product):
     cart_item.delete()
 
     return HttpResponse("DONE")
+
+@login_required
+def update_cart_item_quantity(request, product, quantity):
+    quantity = int(quantity) 
+    user = request.user
+    
+    # ensure cart is exists.
+    cart = get_object_or_404(Cart, created_by=user)
+    
+    # find the item to update from the cart.
+    cart_item = get_object_or_404(CartItem, cart=cart, product=product)
+    # calculate new quantity
+    new_quantity = cart_item.quantity + quantity
+    if new_quantity < 1:
+        cart_item.delete()  # Remove the item from the cart if quantity drops below 1
+        return JsonResponse({"message": "Item removed from cart."})
+    elif new_quantity > cart_item.product.stock_count:
+        cart_item.quantity = cart_item.product.stock_count  # Cap at available stock
+    else:
+        cart_item.quantity = new_quantity  # Update to the new quantity
+
+    cart_item.save()
+    return JsonResponse({
+        "message": "Quantity updated successfully.",
+        "quantity": cart_item.quantity
+    })
