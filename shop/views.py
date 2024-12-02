@@ -37,7 +37,7 @@ def contact_view(request):
 def cart_view(request):
     pass
 @login_required
-def add_to_cart_view(request, product, quantity):
+def add_item_to_cart(request, product, quantity):
     user = request.user
     cart, created = Cart.objects.get_or_create(created_by=user, status="active")
 
@@ -62,7 +62,7 @@ def add_to_cart_view(request, product, quantity):
 
 
 @login_required
-def remove_from_cart_view(request, product):
+def remove_item(request, product):
     user = request.user # get current user
 
     # ensure cart is exists.
