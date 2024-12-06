@@ -36,7 +36,7 @@ def registration_view(request):
         if form.is_valid():
             user = form.save()
             current_site = get_current_site(request)
-            message = render_to_string('accounts/email/activation.html', {
+            message = render_to_string('accounts/verification/activation.html', {
                 'user': user,
                 'domain':current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -76,4 +76,11 @@ def signout(request):
 
 @login_required()
 def dashboard_view(request):
-    return render(request, 'accounts/profile.html')
+    return render(request, 'accounts/profile/account_details.html')
+@login_required()
+def billing_view(request):
+    return render(request, 'accounts/profile/billing_details.html')
+@login_required()
+def security_view(request):
+    return render(request, 'accounts/profile/account_security.html')
+
