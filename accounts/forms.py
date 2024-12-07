@@ -13,3 +13,10 @@ class CustomAuthenticationForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ("username", "password")
+
+class UpdateProfileForm(forms.ModelForm):
+    captcha = CaptchaField()
+    class Meta:
+        model = User
+        fields = ("email", "first_name", "last_name",)
+        exclude = ["username", "password"]

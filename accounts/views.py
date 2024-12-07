@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm
+from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm, UpdateProfileForm
 from accounts.tokens import account_activation_token
 
 def login_view(request):
@@ -76,10 +76,18 @@ def signout(request):
 
 @login_required()
 def dashboard_view(request):
-    return render(request, 'accounts/profile/account_details.html')
+    form = UpdateProfileForm()
+    user = User.objects.get(pk=request.user.pk)
+    if request.method == "POST":
+        form = UpdateProfileForm(request.POST, instance=user) # update the user instance. 
+        if form.is_valid():
+            form.save()
+    return render(request, 'accounts/profile/account_details.html', {"form":form, "user":user})
+
 @login_required()
 def billing_view(request):
     return render(request, 'accounts/profile/billing_details.html')
+
 @login_required()
 def security_view(request):
     return render(request, 'accounts/profile/account_security.html')
