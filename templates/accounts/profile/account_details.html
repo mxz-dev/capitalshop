@@ -79,6 +79,7 @@ color:#69707a;
                 <div class="card-header">Account Details</div>
                 <div class="card-body">
                     <form action="{% url 'accounts:dashboard' %}" method="POST">
+                        {% include 'inc/error_handling.html' %}
                         <!-- Form Group (username)-->
                         <div class="mb-3">
                             <label class="small mb-1" for="inputUsername">Username</label>

@@ -82,6 +82,8 @@ def dashboard_view(request):
         form = UpdateProfileForm(request.POST, instance=user) # update the user instance. 
         if form.is_valid():
             form.save()
+            messages.add_message(request, messages.SUCCESS, 'Profile is Updated.')
+        
     return render(request, 'accounts/profile/account_details.html', {"form":form, "user":user})
 
 @login_required()
