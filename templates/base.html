@@ -78,7 +78,7 @@
                     </div>
                     {% else %}
                     <div class="d-flex mx-3">
-                        <a href="#" class="btn btn-outline-primary">
+                        <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-primary">
                             <i class="bi bi-person"></i>
                             {{request.user}}
                         </a>

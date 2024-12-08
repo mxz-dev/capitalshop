@@ -130,31 +130,21 @@ color:#69707a;
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 mb-4">
-            <!-- Billing card 3-->
-            <div class="card h-100 border-start-lg border-start-success">
-                <div class="card-body">
-                    <div class="small text-muted">Current plan</div>
-                    <div class="h3 d-flex align-items-center">Freelancer</div>
-                    <a class="text-arrow-icon small text-success" href="#!">
-                        Upgrade plan
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
+ 
     <!-- Payment methods card-->
     <div class="card card-header-actions mb-4">
         <div class="card-header">
-            Payment Methods
-            <button class="btn btn-sm btn-primary" type="button">Add Payment Method</button>
+            Credit Cards
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCardModal">
+                Add Credit Card
+            </button>
         </div>
         <div class="card-body px-0">
             <!-- Payment method 1-->
             <div class="d-flex align-items-center justify-content-between px-4">
                 <div class="d-flex align-items-center">
-                     <i class="fab fa-cc-visa fa-2x cc-color-visa"></i>
+                    <svg style="width:25px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96l0 32 576 0 0-32c0-35.3-28.7-64-64-64L64 32zM576 224L0 224 0 416c0 35.3 28.7 64 64 64l448 0c35.3 0 64-28.7 64-64l0-192zM112 352l64 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-64 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zm112 16c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16z"/></svg>
                     <div class="ms-4">
                         <div class="small">Visa ending in 1234</div>
                         <div class="text-xs text-muted">Expires 04/2024</div>
@@ -165,36 +155,7 @@ color:#69707a;
                     <a href="#!">Edit</a>
                 </div>
             </div>
-            <hr>
-            <!-- Payment method 2-->
-            <div class="d-flex align-items-center justify-content-between px-4">
-                <div class="d-flex align-items-center">
-                    <i class="fab fa-cc-mastercard fa-2x cc-color-mastercard"></i>
-                    <div class="ms-4">
-                        <div class="small">Mastercard ending in 5678</div>
-                        <div class="text-xs text-muted">Expires 05/2022</div>
-                    </div>
-                </div>
-                <div class="ms-4 small">
-                    <a class="text-muted me-3" href="#!">Make Default</a>
-                    <a href="#!">Edit</a>
-                </div>
-            </div>
-            <hr>
-            <!-- Payment method 3-->
-            <div class="d-flex align-items-center justify-content-between px-4">
-                <div class="d-flex align-items-center">
-                    <i class="fab fa-cc-amex fa-2x cc-color-amex"></i>
-                    <div class="ms-4">
-                        <div class="small">American Express ending in 9012</div>
-                        <div class="text-xs text-muted">Expires 01/2026</div>
-                    </div>
-                </div>
-                <div class="ms-4 small">
-                    <a class="text-muted me-3" href="#!">Make Default</a>
-                    <a href="#!">Edit</a>
-                </div>
-            </div>
+
         </div>
     </div>
     <!-- Billing history card-->
@@ -219,26 +180,39 @@ color:#69707a;
                             <td>$29.99</td>
                             <td><span class="badge bg-light text-dark">Pending</span></td>
                         </tr>
-                        <tr>
-                            <td>#38594</td>
-                            <td>05/15/2021</td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-success">Paid</span></td>
-                        </tr>
-                        <tr>
-                            <td>#38223</td>
-                            <td>04/15/2021</td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-success">Paid</span></td>
-                        </tr>
-                        <tr>
-                            <td>#38125</td>
-                            <td>03/15/2021</td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-success">Paid</span></td>
-                        </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCardModalLabel">Add Credit Card</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="creditCardForm" action="{% url 'accounts:billing' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="cardNumber" class="form-label">Card Number</label>
+                        <input type="text" class="form-control" id="cardNumber" name="card_number" maxlength="16" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expiryDate" class="form-label">Expiry Date (MM/YY)</label>
+                        <input type="text" class="form-control" id="expiryDate" name="expiry_date" maxlength="5" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cvv" class="form-label">CVV</label>
+                        <input type="text" class="form-control" id="cvv" name="cvv" maxlength="3" required>
+                    </div>
+                    <div class="mb-3">
+                        {{form.captcha}}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
             </div>
         </div>
     </div>

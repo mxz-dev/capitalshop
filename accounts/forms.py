@@ -2,6 +2,7 @@ from django import forms
 from captcha.fields import CaptchaField
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from accounts.models import PaymentInfo
 class CustomUserCreationForm(UserCreationForm):
     captcha = CaptchaField()
     class Meta:
@@ -20,3 +21,9 @@ class UpdateProfileForm(forms.ModelForm):
         model = User
         fields = ("email", "first_name", "last_name",)
         exclude = ["username", "password"]
+
+class PaymentInfoForm(forms.ModelForm):
+    captcha = CaptchaField()
+    class Meta:
+        model = PaymentInfo
+        fields = ("card_number","expiry_date", "cvv")
