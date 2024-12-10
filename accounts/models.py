@@ -21,11 +21,13 @@ class DeliveryInfo(models.Model):
     class Meta:
         verbose_name_plural = "Delivery Info"
 class PaymentInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    card_number = models.IntegerField(validators=[validate_16_digits]) # 16 digit
+    user = models.ForeignKey(User, on_delete=models.CASCADE,)
+    card_number = models.IntegerField(validators=[validate_16_digits] ) # 16 digit
     expiry_date = models.DateField()
     cvv = models.IntegerField(validators=[validate_3_or_4_digits])    
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
-        return f"payment info for {self.user.username}"
+        c = str(self.card_number)
+        return f"****-****-****-{c[:4]} for {self.user.username} "
     class Meta:
         verbose_name_plural = "Payment Info"

@@ -104,6 +104,8 @@ color:#69707a;
     </nav>
     <hr class="mt-0 mb-4">
     <div class="row">
+        {% include 'inc/error_handling.html' %}
+
         <div class="col-lg-4 mb-4">
             <!-- Billing card 1-->
             <div class="card h-100 border-start-lg border-start-primary">
@@ -116,8 +118,10 @@ color:#69707a;
                     </a>
                 </div>
             </div>
+            
         </div>
         <div class="col-lg-4 mb-4">
+            
             <!-- Billing card 2-->
             <div class="card h-100 border-start-lg border-start-secondary">
                 <div class="card-body">
@@ -134,6 +138,7 @@ color:#69707a;
  
     <!-- Payment methods card-->
     <div class="card card-header-actions mb-4">
+        
         <div class="card-header">
             Credit Cards
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCardModal">
@@ -202,7 +207,7 @@ color:#69707a;
                     </div>
                     <div class="mb-3">
                         <label for="expiryDate" class="form-label">Expiry Date (MM/YY)</label>
-                        <input type="text" class="form-control" id="expiryDate" name="expiry_date" maxlength="5" required>
+                        <input type="date" class="form-control" id="expiryDate" name="expiry_date" maxlength="5" required>
                     </div>
                     <div class="mb-3">
                         <label for="cvv" class="form-label">CVV</label>

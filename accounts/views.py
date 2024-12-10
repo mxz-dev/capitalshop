@@ -91,7 +91,10 @@ def billing_view(request):
     if request.method == "POST":
         form = PaymentInfoForm(request.POST)
         if form.is_valid():
-            form.save()
+            print("OK")
+            info = form.save(commit=False)
+            info.user = request.user
+            info.save()
             messages.add_message(request, messages.SUCCESS, 'Credit Card Added.')
     return render(request, 'accounts/profile/billing_details.html', {'form':form})
 
