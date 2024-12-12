@@ -1,24 +1,24 @@
 # Todo's
 - [ ] Authentication Users
   - [ ] Profile
-  - [ ] Login
-  - [ ] Logout
-  - [ ] Signup
+  - [X] Login
+  - [X] Logout
+  - [X] Signup
   - [ ] Security
   - [ ] Forgot Password
 - [ ] Mag
-  - [ ] Add Posts
-  - [ ] Update Posts
-  - [ ] Remove Posts
-  - [ ] View Posts
+  - [X] Add Posts
+  - [X] Update Posts
+  - [X] Remove Posts
+  - [X] View Posts
   - [ ] Commenting System
 - [ ] Shop
-  - [ ] add products
-  - [ ] remove products
-  - [ ] update products
-  - [ ] view products
-  - [ ] add product to cart
+  - [X] add products
+  - [X] remove products
+  - [X] update products
+  - [X] view products
+  - [X] add product to cart
   - [ ] make order
   - [ ] proccess the order
-- [ ] Contact
-- [ ] About     
+- [X] Contact
+- [X] About     

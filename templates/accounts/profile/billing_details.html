@@ -1,102 +1,102 @@
 {% extends 'base.html' %}
+{% load accounts_tags %}
 {% block head %}
 <style type="text/css">
-    	body{margin-top:20px;
-background-color:#f2f6fc;
-color:#69707a;
-}
-.img-account-profile {
-    height: 10rem;
-}
-.rounded-circle {
-    border-radius: 50% !important;
-}
-.card {
-    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
-}
-.card .card-header {
-    font-weight: 500;
-}
-.card-header:first-child {
-    border-radius: 0.35rem 0.35rem 0 0;
-}
-.card-header {
-    padding: 1rem 1.35rem;
-    margin-bottom: 0;
-    background-color: rgba(33, 40, 50, 0.03);
-    border-bottom: 1px solid rgba(33, 40, 50, 0.125);
-}
-.form-control, .dataTable-input {
-    display: block;
-    width: 100%;
-    padding: 0.875rem 1.125rem;
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1;
-    color: #69707a;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #c5ccd6;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border-radius: 0.35rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
+    body{margin-top:20px;
+    background-color:#f2f6fc;
+    color:#69707a;
+    }
+    .img-account-profile {
+        height: 10rem;
+    }
+    .rounded-circle {
+        border-radius: 50% !important;
+    }
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+    }
+    .card .card-header {
+        font-weight: 500;
+    }
+    .card-header:first-child {
+        border-radius: 0.35rem 0.35rem 0 0;
+    }
+    .card-header {
+        padding: 1rem 1.35rem;
+        margin-bottom: 0;
+        background-color: rgba(33, 40, 50, 0.03);
+        border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+    }
+    .form-control, .dataTable-input {
+        display: block;
+        width: 100%;
+        padding: 0.875rem 1.125rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1;
+        color: #69707a;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #c5ccd6;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 0.35rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
 
-.nav-borders .nav-link.active {
-    color: #0061f2;
-    border-bottom-color: #0061f2;
-}
-.nav-borders .nav-link {
-    color: #69707a;
-    border-bottom-width: 0.125rem;
-    border-bottom-style: solid;
-    border-bottom-color: transparent;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: 1rem;
-    margin-right: 1rem;
-}
-.fa-2x {
-    font-size: 2em;
-}
+    .nav-borders .nav-link.active {
+        color: #0061f2;
+        border-bottom-color: #0061f2;
+    }
+    .nav-borders .nav-link {
+        color: #69707a;
+        border-bottom-width: 0.125rem;
+        border-bottom-style: solid;
+        border-bottom-color: transparent;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    .fa-2x {
+        font-size: 2em;
+    }
 
-.table-billing-history th, .table-billing-history td {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-    padding-left: 1.375rem;
-    padding-right: 1.375rem;
-}
-.table > :not(caption) > * > *, .dataTable-table > :not(caption) > * > * {
-    padding: 0.75rem 0.75rem;
-    background-color: var(--bs-table-bg);
-    border-bottom-width: 1px;
-    box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
-}
+    .table-billing-history th, .table-billing-history td {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        padding-left: 1.375rem;
+        padding-right: 1.375rem;
+    }
+    .table > :not(caption) > * > *, .dataTable-table > :not(caption) > * > * {
+        padding: 0.75rem 0.75rem;
+        background-color: var(--bs-table-bg);
+        border-bottom-width: 1px;
+        box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+    }
 
-.border-start-primary {
-    border-left-color: #0061f2 !important;
-}
-.border-start-secondary {
-    border-left-color: #6900c7 !important;
-}
-.border-start-success {
-    border-left-color: #00ac69 !important;
-}
-.border-start-lg {
-    border-left-width: 0.25rem !important;
-}
-.h-100 {
-    height: 100% !important;
-}
+    .border-start-primary {
+        border-left-color: #0061f2 !important;
+    }
+    .border-start-secondary {
+        border-left-color: #6900c7 !important;
+    }
+    .border-start-success {
+        border-left-color: #00ac69 !important;
+    }
+    .border-start-lg {
+        border-left-width: 0.25rem !important;
+    }
+    .h-100 {
+        height: 100% !important;
+    }
     </style>
-    {% endblock head %}
+{% endblock head %}
 {%block content%}
 <div class="container-xl px-4 mt-4">
-    <!-- Account page navigation-->
     <nav class="nav nav-borders">
         <a class="nav-link ms-0" href="{% url 'accounts:dashboard' %}">Profile</a>
         <a class="nav-link active" href="{% url 'accounts:billing' %}">Billing</a>
@@ -105,62 +105,36 @@ color:#69707a;
     <hr class="mt-0 mb-4">
     <div class="row">
         {% include 'inc/error_handling.html' %}
-
-        <div class="col-lg-4 mb-4">
-            <!-- Billing card 1-->
-            <div class="card h-100 border-start-lg border-start-primary">
-                <div class="card-body">
-                    <div class="small text-muted">Current monthly bill</div>
-                    <div class="h3">$20.00</div>
-                    <a class="text-arrow-icon small" href="#!">
-                        Switch to yearly billing
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </a>
-                </div>
-            </div>
-            
-        </div>
-        <div class="col-lg-4 mb-4">
-            
-            <!-- Billing card 2-->
-            <div class="card h-100 border-start-lg border-start-secondary">
-                <div class="card-body">
-                    <div class="small text-muted">Next payment due</div>
-                    <div class="h3">July 15</div>
-                    <a class="text-arrow-icon small text-secondary" href="#!">
-                        View payment history
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
+    {% include 'inc/credit_card_form.html' %}
  
     <!-- Payment methods card-->
     <div class="card card-header-actions mb-4">
-        
         <div class="card-header">
             Credit Cards
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCardModal">
+            <button type="button" class="btn btn-primary btn-sm" onclick="addCard('{% url 'accounts:add_card' %}')" data-bs-toggle="modal" data-bs-target="#addCardModal">
                 Add Credit Card
             </button>
         </div>
         <div class="card-body px-0">
             <!-- Payment method 1-->
+             {% for card in cards %}
             <div class="d-flex align-items-center justify-content-between px-4">
                 <div class="d-flex align-items-center">
                     <svg style="width:25px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96l0 32 576 0 0-32c0-35.3-28.7-64-64-64L64 32zM576 224L0 224 0 416c0 35.3 28.7 64 64 64l448 0c35.3 0 64-28.7 64-64l0-192zM112 352l64 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-64 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zm112 16c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16z"/></svg>
                     <div class="ms-4">
-                        <div class="small">Visa ending in 1234</div>
-                        <div class="text-xs text-muted">Expires 04/2024</div>
+                        <div class="small">Credit Card ending in {{card.card_number|splitter:4}}</div>
+                        <div class="text-xs text-muted">Expires {{card.expiry_date|date:"Y/m/d"}}</div>
                     </div>
                 </div>
                 <div class="ms-4 small">
-                    <div class="badge bg-light text-dark me-3">Default</div>
-                    <a href="#!">Edit</a>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" onclick="editCard('{% url 'accounts:edit_card' pk=card.pk %}')" data-bs-target="#addCardModal">
+                        Edit
+                    </button>
+                    <a class="btn btn-sm btn-danger" href="#!">Delete</a>
                 </div>
             </div>
-
+            {% endfor %}
         </div>
     </div>
     <!-- Billing history card-->
@@ -191,35 +165,18 @@ color:#69707a;
         </div>
     </div>
 </div>
-<div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCardModalLabel">Add Credit Card</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="creditCardForm" action="{% url 'accounts:billing' %}" method="post">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="cardNumber" class="form-label">Card Number</label>
-                        <input type="text" class="form-control" id="cardNumber" name="card_number" maxlength="16" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="expiryDate" class="form-label">Expiry Date (MM/YY)</label>
-                        <input type="date" class="form-control" id="expiryDate" name="expiry_date" maxlength="5" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="cvv" class="form-label">CVV</label>
-                        <input type="text" class="form-control" id="cvv" name="cvv" maxlength="3" required>
-                    </div>
-                    <div class="mb-3">
-                        {{form.captcha}}
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
+<script>
+    form = document.forms['creditCardForm']
+    addCard = (c) => {
+        form.action = c
+    }
+    editCard = (c) => {
+        console.log(c)
+        form.action = c
+    }
+    function remove_card(){
+
+    }
+</script>
 {% endblock content %}

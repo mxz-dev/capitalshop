@@ -28,6 +28,6 @@ class PaymentInfo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         c = str(self.card_number)
-        return f"****-****-****-{c[:4]} for {self.user.username} "
+        return f"****-****-****-{c[-4:]} for {self.user.username} "
     class Meta:
         verbose_name_plural = "Payment Info"

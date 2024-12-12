@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.http import JsonResponse
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -12,6 +13,7 @@ from django.urls import reverse
 
 from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm, UpdateProfileForm, PaymentInfoForm
 from accounts.tokens import account_activation_token
+from accounts.models import PaymentInfo
 
 def login_view(request):
     if request.user.is_authenticated != True: 
@@ -87,17 +89,34 @@ def dashboard_view(request):
 
 @login_required()
 def billing_view(request):
+    cards = PaymentInfo.objects.filter(user=request.user)
     form = PaymentInfoForm()
+    return render(request, 'accounts/profile/billing_details.html', {'form':form, 'cards':cards})
+
+@login_required()
+def add_card(request):
     if request.method == "POST":
         form = PaymentInfoForm(request.POST)
         if form.is_valid():
-            print("OK")
-            info = form.save(commit=False)
-            info.user = request.user
-            info.save()
-            messages.add_message(request, messages.SUCCESS, 'Credit Card Added.')
-    return render(request, 'accounts/profile/billing_details.html', {'form':form})
+            card = form.save(commit=False)
+            card.user = request.user
+            card.save()
+            messages.add_message(request, messages.SUCCESS, 'credit card add successfuly.')
+    return redirect(reverse("accounts:billing"))
+     
+def edit_card(request, pk):
+    card = get_object_or_404(PaymentInfo, user=request.user, pk=pk)
+    if request.method == "POST":
+        form = PaymentInfoForm(request.POST, instance=card)
+        if form.is_valid():
+            card = form.save(commit=False)
+            card.user = request.user
+            card.save()
+            messages.add_message(request, messages.SUCCESS, 'credit card updated successfuly.')
+    return redirect(reverse("accounts:billing"))
 
+def delete_card(request):
+    pass
 @login_required()
 def security_view(request):
     return render(request, 'accounts/profile/account_security.html')
