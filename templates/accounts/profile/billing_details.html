@@ -97,6 +97,7 @@
 {% endblock head %}
 {%block content%}
 <div class="container-xl px-4 mt-4">
+    {% include 'inc/credit_card_form.html' %}
     <nav class="nav nav-borders">
         <a class="nav-link ms-0" href="{% url 'accounts:dashboard' %}">Profile</a>
         <a class="nav-link active" href="{% url 'accounts:billing' %}">Billing</a>
@@ -104,34 +105,29 @@
     </nav>
     <hr class="mt-0 mb-4">
     <div class="row">
-        {% include 'inc/error_handling.html' %}
+    {% include 'inc/error_handling.html' %}
     </div>
-    {% include 'inc/credit_card_form.html' %}
- 
-    <!-- Payment methods card-->
     <div class="card card-header-actions mb-4">
         <div class="card-header">
             Credit Cards
-            <button type="button" class="btn btn-primary btn-sm" onclick="addCard('{% url 'accounts:add_card' %}')" data-bs-toggle="modal" data-bs-target="#addCardModal">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+            data-bs-target="#addCardModal">
+                <i class="bi bi-plus"></i>
                 Add Credit Card
             </button>
         </div>
         <div class="card-body px-0">
-            <!-- Payment method 1-->
-             {% for card in cards %}
+            {% for card in cards %}
             <div class="d-flex align-items-center justify-content-between px-4">
                 <div class="d-flex align-items-center">
-                    <svg style="width:25px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96l0 32 576 0 0-32c0-35.3-28.7-64-64-64L64 32zM576 224L0 224 0 416c0 35.3 28.7 64 64 64l448 0c35.3 0 64-28.7 64-64l0-192zM112 352l64 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-64 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zm112 16c0-8.8 7.2-16 16-16l128 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-128 0c-8.8 0-16-7.2-16-16z"/></svg>
+                    <i class="bi bi-credit-card-fill"></i>
                     <div class="ms-4">
                         <div class="small">Credit Card ending in {{card.card_number|splitter:4}}</div>
-                        <div class="text-xs text-muted">Expires {{card.expiry_date|date:"Y/m/d"}}</div>
+                        <div class="text-xs text-muted" style="font-size:.8rem">{{card.expiry_date|date:"Y/m/d"}}</div>
                     </div>
                 </div>
                 <div class="ms-4 small">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" onclick="editCard('{% url 'accounts:edit_card' pk=card.pk %}')" data-bs-target="#addCardModal">
-                        Edit
-                    </button>
-                    <a class="btn btn-sm btn-danger" href="#!">Delete</a>
+                    <a class="btn btn-sm btn-danger" onclick="removeCard('{% url 'accounts:delete_card' pk=card.pk %}')" ><i class="bi bi-trash"></i> Delete</a>
                 </div>
             </div>
             {% endfor %}
@@ -164,19 +160,16 @@
             </div>
         </div>
     </div>
+    <script>
+        function removeCard(url){
+            fetch(url, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message){
+                    location.reload()
+                }
+            })
+        }
+    </script>
 </div>
-
-<script>
-    form = document.forms['creditCardForm']
-    addCard = (c) => {
-        form.action = c
-    }
-    editCard = (c) => {
-        console.log(c)
-        form.action = c
-    }
-    function remove_card(){
-
-    }
-</script>
 {% endblock content %}

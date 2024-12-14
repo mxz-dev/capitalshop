@@ -91,32 +91,27 @@ def dashboard_view(request):
 def billing_view(request):
     cards = PaymentInfo.objects.filter(user=request.user)
     form = PaymentInfoForm()
-    return render(request, 'accounts/profile/billing_details.html', {'form':form, 'cards':cards})
-
-@login_required()
-def add_card(request):
     if request.method == "POST":
         form = PaymentInfoForm(request.POST)
         if form.is_valid():
-            card = form.save(commit=False)
-            card.user = request.user
-            card.save()
-            messages.add_message(request, messages.SUCCESS, 'credit card add successfuly.')
-    return redirect(reverse("accounts:billing"))
-     
-def edit_card(request, pk):
-    card = get_object_or_404(PaymentInfo, user=request.user, pk=pk)
-    if request.method == "POST":
-        form = PaymentInfoForm(request.POST, instance=card)
-        if form.is_valid():
-            card = form.save(commit=False)
-            card.user = request.user
-            card.save()
-            messages.add_message(request, messages.SUCCESS, 'credit card updated successfuly.')
-    return redirect(reverse("accounts:billing"))
+            # [c] here a filter for avoid duplicate cards
+            c = cards.filter(card_number=form.cleaned_data["card_number"])
+            if c.count() < 1:
+                card = form.save(commit=False)
+                card.user = request.user
+                card.save()
+                messages.add_message(request, messages.SUCCESS, 'credit card add successfuly.')
+            else:
+                messages.add_message(request, messages.INFO, 'Dupicate Card! please try another one.')
+    return render(request, 'accounts/profile/billing_details.html', {'form':form, 'cards':cards})
 
-def delete_card(request):
-    pass
+def delete_card(request, pk):
+    card = get_object_or_404(PaymentInfo, user=request.user, pk=pk)
+    card.delete()
+    return JsonResponse({
+        "message": "item removed from cart.",
+     })
+
 @login_required()
 def security_view(request):
     return render(request, 'accounts/profile/account_security.html')
