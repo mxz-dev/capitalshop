@@ -105,6 +105,7 @@ def billing_view(request):
                 messages.add_message(request, messages.INFO, 'Dupicate Card! please try another one.')
     return render(request, 'accounts/profile/billing_details.html', {'form':form, 'cards':cards})
 
+@login_required()
 def delete_card(request, pk):
     card = get_object_or_404(PaymentInfo, user=request.user, pk=pk)
     card.delete()
