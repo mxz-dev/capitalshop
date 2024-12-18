@@ -2,3 +2,4 @@ django==4.2.16
 pillow
 django-summernote
 django-simple-captcha
+django-phonenumber-field
