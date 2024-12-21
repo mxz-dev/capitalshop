@@ -14,6 +14,7 @@ from django.urls import reverse
 from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm, UpdateProfileForm, PaymentInfoForm
 from accounts.tokens import account_activation_token
 from accounts.models import PaymentInfo
+from shop.models import Cart
 
 def login_view(request):
     if request.user.is_authenticated != True: 
@@ -65,6 +66,8 @@ def activation_view(request, uidb64, token):
     if user and active:
         user.is_active = True
         user.save()
+        c = Cart(created_by=user,status="abandoned")
+        c.save()
         login(request, user)
         messages.add_message(request, messages.SUCCESS, 'email activation is successful')
         return redirect(reverse("shop:home"))

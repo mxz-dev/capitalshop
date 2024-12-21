@@ -55,7 +55,7 @@
                                 <div class="card-body">
                                     <div class="small text-muted">{{post.publish_at|date:"d M Y"}}</div>
                                     <h3 class="card-title">{{post.subject}}</h3>
-                                    <p class="card-text">{{post.content|truncatewords:15}}</p>
+                                    <p class="card-text">{{post.content|truncatewords:15|striptags}}</p>
                                     <a class="btn btn-primary" href="{% url 'mag:post' slug=post.slug %}">Read more →</a>
                                 </div>
                             </div>
