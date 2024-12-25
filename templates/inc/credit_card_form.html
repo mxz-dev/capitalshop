@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="creditCardForm" method="post">
+                <form id="creditCardForm" action="{% url 'accounts:add_credit_card' %}" method="post">
                     {% csrf_token %}
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="credit_card"><i class="bi bi-credit-card-fill"></i></span>
@@ -21,7 +21,7 @@
                         <input style="-webkit-text-security: disc;text-security: disc;" type="text" class="form-control"  maxlength="4"  name="cvv" placeholder="***" aria-label="cvv" aria-describedby="cvv">  
                     </div>
                     <div class="mb-3">
-                        {{form.captcha}}
+                        {{payment_form.captcha}}
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>

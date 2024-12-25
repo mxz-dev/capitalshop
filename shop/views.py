@@ -34,6 +34,7 @@ def contact_view(request):
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, 'we are responds you very soon.')
+            return redirect(reverse('shop:contact'))
     return render(request, 'contact.html', {"form":form})
 
 @login_required

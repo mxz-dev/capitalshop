@@ -6,6 +6,8 @@ Billing
 {%block content%}
 <div class="container-xl px-4 mt-4">
     {% include 'inc/credit_card_form.html' %}
+    {% include 'inc/delivery_info_form.html' %}
+
     <nav class="nav nav-borders">
         <a class="nav-link ms-0" href="{% url 'accounts:dashboard' %}">Profile</a>
         <a class="nav-link active" href="{% url 'accounts:billing' %}">Billing</a>
@@ -40,6 +42,34 @@ Billing
             </div>
             {% endfor %}
         </div>
+        
+    </div>
+    <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            Delivery Info's
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+            data-bs-target="#addAddressModal">
+                <i class="bi bi-plus"></i>
+                Add Location
+            </button>
+        </div>
+        <div class="card-body px-0">
+            {% for loc in locations %}
+            <div class="d-flex align-items-center justify-content-between px-4">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <div class="ms-4">
+                        <div class="small">{{loc.address}}</div>
+                        <div class="text-xs text-muted" style="font-size:.6rem">Phone {{loc.phone_number}}</div>
+                    </div>
+                </div>
+                <div class="ms-4 small">
+                    <a class="btn btn-sm btn-danger" onclick="removeAddr('{% url 'accounts:delete_info' pk=loc.pk %}')"><i class="bi bi-trash"></i> Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
     </div>
     <!-- Billing history card-->
     <div class="card mb-4">
@@ -70,6 +100,15 @@ Billing
     </div>
     <script>
         function removeCard(url){
+            fetch(url, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message){
+                    location.reload()
+                }
+            })
+        }
+        function removeAddr(url){
             fetch(url, { method: 'GET' })
             .then(response => response.json())
             .then(data => {

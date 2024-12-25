@@ -11,9 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm, UpdateProfileForm, PaymentInfoForm
+from accounts.forms import CustomAuthenticationForm, DeliveryInfoForm, CustomUserCreationForm, UpdateProfileForm, PaymentInfoForm
 from accounts.tokens import account_activation_token
-from accounts.models import PaymentInfo
+from accounts.models import PaymentInfo, DeliveryInfo
 from shop.models import Cart
 
 def login_view(request):
@@ -93,12 +93,18 @@ def dashboard_view(request):
 @login_required()
 def billing_view(request):
     cards = PaymentInfo.objects.filter(user=request.user)
+    loc = DeliveryInfo.objects.filter(user=request.user)
+    payment_form = PaymentInfoForm()
+    delivery_form = DeliveryInfoForm()
+    return render(request, 'accounts/profile/billing_details.html', {'payment_form':payment_form, 'delivery_form':delivery_form, 'cards':cards, 'locations':loc})
+@login_required()
+def add_credit_card(request):
     form = PaymentInfoForm()
     if request.method == "POST":
         form = PaymentInfoForm(request.POST)
         if form.is_valid():
             # [c] here a filter for avoid duplicate cards
-            c = cards.filter(card_number=form.cleaned_data["card_number"])
+            c = PaymentInfo.objects.filter(card_number=form.cleaned_data["card_number"])
             if c.count() < 1:
                 card = form.save(commit=False)
                 card.user = request.user
@@ -106,14 +112,33 @@ def billing_view(request):
                 messages.add_message(request, messages.SUCCESS, 'credit card add successfuly.')
             else:
                 messages.add_message(request, messages.INFO, 'Dupicate Card! please try another one.')
-    return render(request, 'accounts/profile/billing_details.html', {'form':form, 'cards':cards})
+    return redirect(reverse("accounts:billing"))
+@login_required()
+def add_delivery_info(request):
+    form = DeliveryInfoForm()
+    if request.method == "POST":
+        form = DeliveryInfoForm(request.POST)
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.user = request.user
+            info.save()
+            messages.add_message(request, messages.SUCCESS, 'delivery info add successfuly.')
+    return redirect(reverse("accounts:billing"))
 
 @login_required()
 def delete_card(request, pk):
     card = get_object_or_404(PaymentInfo, user=request.user, pk=pk)
     card.delete()
     return JsonResponse({
-        "message": "item removed from cart.",
+        "message": "card removed.",
+     })
+
+@login_required()
+def delete_address(request, pk):
+    addr = get_object_or_404(DeliveryInfo, user=request.user, pk=pk)
+    addr.delete()
+    return JsonResponse({
+        "message": "Delivery info removed.",
      })
 
 @login_required()

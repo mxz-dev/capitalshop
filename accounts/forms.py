@@ -2,7 +2,7 @@ from django import forms
 from captcha.fields import CaptchaField
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from accounts.models import PaymentInfo
+from accounts.models import PaymentInfo, DeliveryInfo
 class CustomUserCreationForm(UserCreationForm):
     captcha = CaptchaField()
     class Meta:
@@ -27,3 +27,8 @@ class PaymentInfoForm(forms.ModelForm):
     class Meta:
         model = PaymentInfo
         fields = ("card_number","expiry_date", "cvv")
+class DeliveryInfoForm(forms.ModelForm):
+    captcha = CaptchaField()
+    class Meta:
+        model = DeliveryInfo
+        fields = ("address", "phone_number")

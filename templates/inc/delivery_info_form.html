@@ -1,0 +1,27 @@
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAddressModalLabel">Add Credit Card</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addressForm" action="{% url 'accounts:add_delivery_info' %}" method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="address"><i class="bi bi-geo-alt-fill"></i></span>
+                        <input type="text" class="form-control" id="address" placeholder="Address" maxlength="16" name='address' aria-label="address" aria-describedby="address">  
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="date"><i class="bi bi-telephone"></i></span>
+                        <input type="tel" class="form-control" name="phone_number" placeholder="+1234567898" aria-label="phone number" aria-describedby="tel">  
+                    </div>
+                    <div class="mb-3">
+                        {{delivery_form.captcha}}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
