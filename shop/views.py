@@ -1,4 +1,4 @@
-from django.shortcuts import render , get_object_or_404, redirect, reverse, HttpResponse
+from django.shortcuts import render , get_object_or_404, redirect, HttpResponse
 from shop.models import Products, ProductCategories, Cart, CartItem
 from shop.forms import ContactForm
 from mag.models import Post
@@ -8,6 +8,8 @@ from django.db.models import Q
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse
+
 
 def home_view(request):
     products = Products.objects.filter(in_stock=True).order_by('-created_at')[:4]

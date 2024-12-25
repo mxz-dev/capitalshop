@@ -79,33 +79,40 @@ def signout(request):
     logout(request)
     return redirect(reverse("accounts:login"))
 
-@login_required()
-def dashboard_view(request):
-    form = UpdateProfileForm()
-    user = User.objects.get(pk=request.user.pk)
+@login_required
+def update_profile_view(request):
+    user = request.user
     if request.method == "POST":
-        form = UpdateProfileForm(request.POST, instance=user) # update the user instance. 
+        form = UpdateProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            messages.add_message(request, messages.SUCCESS, 'Profile is Updated.')
-    return render(request, 'accounts/profile/account_details.html', {"form":form, "user":user})
+            messages.success(request, 'Profile is updated.')
+            return redirect('accounts:profile')
+    else:
+        form = UpdateProfileForm(instance=user)
+    return render(request, 'accounts/profile/account_details.html', {"form": form, "user": user})
 
 @login_required()
 def billing_view(request):
     cards = PaymentInfo.objects.filter(user=request.user)
-    loc = DeliveryInfo.objects.filter(user=request.user)
+    locations = DeliveryInfo.objects.filter(user=request.user)
     payment_form = PaymentInfoForm()
     delivery_form = DeliveryInfoForm()
-    return render(request, 'accounts/profile/billing_details.html', {'payment_form':payment_form, 'delivery_form':delivery_form, 'cards':cards, 'locations':loc})
-@login_required()
+    return render(request, 'accounts/profile/billing_details.html', {
+        'payment_form':payment_form,
+        'delivery_form':delivery_form,
+        'cards':cards,
+        'locations':locations
+        })
+
+@login_required
 def add_credit_card(request):
     form = PaymentInfoForm()
     if request.method == "POST":
         form = PaymentInfoForm(request.POST)
         if form.is_valid():
-            # [c] here a filter for avoid duplicate cards
-            c = PaymentInfo.objects.filter(card_number=form.cleaned_data["card_number"])
-            if c.count() < 1:
+            card_number = form.cleaned_data["card_number"]
+            if not PaymentInfo.objects.filter(card_number=card_number, user=request.user).exists():
                 card = form.save(commit=False)
                 card.user = request.user
                 card.save()
@@ -113,7 +120,8 @@ def add_credit_card(request):
             else:
                 messages.add_message(request, messages.INFO, 'Dupicate Card! please try another one.')
     return redirect(reverse("accounts:billing"))
-@login_required()
+
+@login_required
 def add_delivery_info(request):
     form = DeliveryInfoForm()
     if request.method == "POST":

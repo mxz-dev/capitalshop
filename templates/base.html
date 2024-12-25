@@ -160,8 +160,10 @@
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{% url 'accounts:dashboard' %}">Profile</a></li>
                               <li><a class="dropdown-item" href="{% url 'accounts:billing' %}">Billing</a></li>
-                              <li><hr class="dropdown-divider"></li>
                               <li><a class="dropdown-item" href="{% url 'accounts:security' %}">Account Security</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item text-danger" href="{% url 'accounts:signout' %}">Logout</a></li>
+
                             </ul>
                           </li>
                     </div>
