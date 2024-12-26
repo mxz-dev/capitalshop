@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-from accounts.forms import CustomAuthenticationForm, DeliveryInfoForm, CustomUserCreationForm, UpdateProfileForm, PaymentInfoForm
+from accounts.forms import CustomAuthenticationForm, UpdateUserPasswordForm, DeliveryInfoForm, CustomUserCreationForm, UpdateProfileForm, PaymentInfoForm
 from accounts.tokens import account_activation_token
 from accounts.models import PaymentInfo, DeliveryInfo
 from shop.models import Cart
@@ -87,7 +87,9 @@ def update_profile_view(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile is updated.')
-            return redirect('accounts:profile')
+            return JsonResponse({'success': True, 'message': 'Profile is updated.'})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
     else:
         form = UpdateProfileForm(instance=user)
     return render(request, 'accounts/profile/account_details.html', {"form": form, "user": user})
@@ -116,10 +118,12 @@ def add_credit_card(request):
                 card = form.save(commit=False)
                 card.user = request.user
                 card.save()
-                messages.add_message(request, messages.SUCCESS, 'credit card add successfuly.')
+                return JsonResponse({'success': True, 'message': 'Credit card added successfully.'})
             else:
-                messages.add_message(request, messages.INFO, 'Dupicate Card! please try another one.')
-    return redirect(reverse("accounts:billing"))
+                return JsonResponse({'success': False, 'message': 'Duplicate card! Please try another one.'})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 @login_required
 def add_delivery_info(request):
@@ -130,8 +134,10 @@ def add_delivery_info(request):
             info = form.save(commit=False)
             info.user = request.user
             info.save()
-            messages.add_message(request, messages.SUCCESS, 'delivery info add successfuly.')
-    return redirect(reverse("accounts:billing"))
+            return JsonResponse({'success': True, 'message': 'Delivery info added successfully.'})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})  
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 @login_required()
 def delete_card(request, pk):
@@ -151,5 +157,33 @@ def delete_address(request, pk):
 
 @login_required()
 def security_view(request):
-    return render(request, 'accounts/profile/account_security.html')
+    form = UpdateUserPasswordForm()
+    return render(request, 'accounts/profile/account_security.html', {"form": form})
 
+@login_required
+def delete_user(request):
+    user = User.objects.get(pk=request.user.pk)
+    user.delete()
+    return JsonResponse({'success': True, 'message': 'User deleted successfully.'})
+
+@login_required
+def update_user_password(request):
+    user = User.objects.get(pk=request.user.pk)
+    if request.method == "POST":
+        form = UpdateUserPasswordForm(request.POST)
+        if form.is_valid():
+            current_password = form.cleaned_data.get("current_password")
+            new_password = form.cleaned_data.get("new_password")
+            new_passsword_confirm = form.cleaned_data.get("new_password_confirm")
+            if user.check_password(current_password):
+                if new_password == new_passsword_confirm:
+                    user.set_password(new_password)
+                    user.save()
+                    return JsonResponse({'success': True, 'message': 'Password updated successfully.'})
+                else:
+                    return JsonResponse({'success': False, 'message': 'New passwords do not match.'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Current password is incorrect.'})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})

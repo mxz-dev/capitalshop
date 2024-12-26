@@ -32,3 +32,10 @@ class DeliveryInfoForm(forms.ModelForm):
     class Meta:
         model = DeliveryInfo
         fields = ("address", "phone_number")
+    
+
+class UpdateUserPasswordForm(forms.Form):
+    captcha = CaptchaField()
+    current_password = forms.CharField(widget=forms.PasswordInput())
+    new_password = forms.CharField(widget=forms.PasswordInput())
+    new_password_confirm = forms.CharField(widget=forms.PasswordInput())

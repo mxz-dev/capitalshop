@@ -17,12 +17,16 @@
             <div class="card mb-4">
                 <div class="card-header">Account Details</div>
                 <div class="card-body">
-                    <form action="{% url 'accounts:dashboard' %}" method="POST">
-                        {% include 'inc/error_handling.html' %}
+                    <div style="display:none;" class="errors alert alert-danger pb-2 pt-2" role="alert"></div>
+                    <form id="updateProfileForm" action="{% url 'accounts:dashboard' %}" method="POST">
                         <!-- Form Group (username)-->
                         <div class="mb-3">
                             <label class="small mb-1" for="inputUsername">Username</label>
                             <input class="form-control" id="inputUsername" type="text" value="{{user.username}}" disabled />
+                        </div>
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputemail">email</label>
+                            <input class="form-control" id="inputemail" name="email" type="text" value="{{user.email}}" />
                         </div>
                         <!-- Form Row-->
                         <div class="row gx-3 mb-3">
@@ -37,29 +41,7 @@
                                 <input class="form-control" id="inputLastName" name="last_name" type="text" placeholder="Enter your last name" value="{{user.last_name}}">
                             </div>
                         </div>
-                        <!-- Form Row  -->
-                        {% comment %} <div class="row gx-3 mb-3">
-                            <!-- Form Group (location)-->
-                            <div class="mb-3">
-                                <label class="small mb-1" for="inputLocation">Address</label>
-                                <input class="form-control" id="inputLocation" name="address" type="text" placeholder="Enter your location" value="{{Info.address}}">
-                            </div>
-                        </div> {% endcomment %}
-                        <!-- Form Group (email address)-->
-                        <div class="mb-3">
-                            <label class="small mb-1" for="inputEmailAddress">Email address</label>
-                            <input class="form-control" id="inputEmailAddress" name="email" type="email" placeholder="Enter your email address" value="{{user.email}}">
-                        </div>
-                        <!-- Form Row-->
-                        {% comment %} <div class="row gx-3 mb-3">
-                            <!-- Form Group (phone number)-->
-                            <div class="mb-3">
-                                <label class="small mb-1" for="inputPhone">Phone number</label>
-                                <input class="form-control" id="inputPhone" name="phone_number" type="tel" placeholder="Enter your phone number" value="{{Info.phone_number}}">
-                            </div>
-                        </div> {% endcomment %}
-                            <div class="row gx-3 mb-3">
-                            <!-- Form Group (phone number)-->
+                        <div class="row gx-3 mb-3">
                             <div class="mb-3">
                                 {{form.captcha}}    
                             </div>
@@ -75,4 +57,33 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $("#updateProfileForm").on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success){
+                        showAlert(response.message)
+                        location.reload();
+                    }
+                    else{
+                        $('.errors').empty().css({'display': 'block'});
+                        $.each(response.errors, function(key, value) {
+                            $('.errors').append('<li>' + value.join(', ') + '</li>');
+                        }); 
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('.errors').text('An error occurred: ' + error);
+                }
+                
+        })
+    });
+});
+</script>
 {%endblock%}

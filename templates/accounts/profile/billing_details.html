@@ -5,118 +5,179 @@ Billing
 {%endblock title%}
 {%block content%}
 <div class="container-xl px-4 mt-4">
-    {% include 'inc/credit_card_form.html' %}
-    {% include 'inc/delivery_info_form.html' %}
-
-    <nav class="nav nav-borders">
-        <a class="nav-link ms-0" href="{% url 'accounts:dashboard' %}">Profile</a>
-        <a class="nav-link active" href="{% url 'accounts:billing' %}">Billing</a>
-        <a class="nav-link" href="{% url 'accounts:security' %}">Security</a>
-    </nav>
-    <hr class="mt-0 mb-4">
-    <div class="row">
-    {% include 'inc/error_handling.html' %}
-    </div>
-    <div class="card card-header-actions mb-4">
-        <div class="card-header">
-            Credit Cards
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+   {% include 'inc/credit_card_form.html' %}
+   {% include 'inc/delivery_info_form.html' %}
+   <nav class="nav nav-borders">
+      <a class="nav-link ms-0" href="{% url 'accounts:dashboard' %}">Profile</a>
+      <a class="nav-link active" href="{% url 'accounts:billing' %}">Billing</a>
+      <a class="nav-link" href="{% url 'accounts:security' %}">Security</a>
+   </nav>
+   <hr class="mt-0 mb-4">
+   <div class="row">
+      <div style="display:none;" class="errors alert alert-danger pb-2 pt-2" role="alert"></div>
+   </div>
+   <div class="card card-header-actions mb-4">
+      <div class="card-header">
+         Credit Cards
+         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
             data-bs-target="#addCardModal">
-                <i class="bi bi-plus"></i>
-                Add Credit Card
-            </button>
-        </div>
-        <div class="card-body px-0">
-            {% for card in cards %}
-            <div class="d-flex align-items-center justify-content-between px-4">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-credit-card-fill"></i>
-                    <div class="ms-4">
-                        <div class="small">Credit Card ending in {{card.card_number|splitter:4}}</div>
-                        <div class="text-xs text-muted" style="font-size:.8rem">{{card.expiry_date|date:"Y/m/d"}}</div>
-                    </div>
-                </div>
-                <div class="ms-4 small">
-                    <a class="btn btn-sm btn-danger" onclick="removeCard('{% url 'accounts:delete_card' pk=card.pk %}')" ><i class="bi bi-trash"></i> Delete</a>
-                </div>
+         <i class="bi bi-plus"></i>
+         Add Credit Card
+         </button>
+      </div>
+      <div class="card-body px-0">
+         {% for card in cards %}
+         <div class="d-flex align-items-center justify-content-between px-4">
+            <div class="d-flex align-items-center">
+               <i class="bi bi-credit-card-fill"></i>
+               <div class="ms-4">
+                  <div class="small">Credit Card ending in {{card.card_number|splitter:4}}</div>
+                  <div class="text-xs text-muted" style="font-size:.8rem">{{card.expiry_date|date:"Y/m/d"}}</div>
+               </div>
             </div>
-            {% endfor %}
-        </div>
-        
-    </div>
-    <div class="card card-header-actions mb-4">
-        <div class="card-header">
-            Delivery Info's
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+            <div class="ms-4 small">
+               <a class="btn btn-sm btn-danger" onclick="removeCard('{% url 'accounts:delete_card' pk=card.pk %}')" ><i class="bi bi-trash"></i> Delete</a>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+   </div>
+   <div class="card card-header-actions mb-4">
+      <div class="card-header">
+         Delivery Info's
+         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
             data-bs-target="#addAddressModal">
-                <i class="bi bi-plus"></i>
-                Add Location
-            </button>
-        </div>
-        <div class="card-body px-0">
-            {% for loc in locations %}
-            <div class="d-flex align-items-center justify-content-between px-4">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-geo-alt-fill"></i>
-                    <div class="ms-4">
-                        <div class="small">{{loc.address}}</div>
-                        <div class="text-xs text-muted" style="font-size:.6rem">Phone {{loc.phone_number}}</div>
-                    </div>
-                </div>
-                <div class="ms-4 small">
-                    <a class="btn btn-sm btn-danger" onclick="removeAddr('{% url 'accounts:delete_info' pk=loc.pk %}')"><i class="bi bi-trash"></i> Delete</a>
-                </div>
+         <i class="bi bi-plus"></i>
+         Add Location
+         </button>
+      </div>
+      <div class="card-body px-0">
+         {% for loc in locations %}
+         <div class="d-flex align-items-center justify-content-between px-4">
+            <div class="d-flex align-items-center">
+               <i class="bi bi-geo-alt-fill"></i>
+               <div class="ms-4">
+                  <div class="small">{{loc.address}}</div>
+                  <div class="text-xs text-muted" style="font-size:.6rem">Phone {{loc.phone_number}}</div>
+               </div>
             </div>
-            {% endfor %}
-        </div>
-        
-    </div>
-    <!-- Billing history card-->
-    <div class="card mb-4">
-        <div class="card-header">Billing History</div>
-        <div class="card-body p-0">
-            <!-- Billing history table-->
-            <div class="table-responsive table-billing-history">
-                <table class="table mb-0">
-                    <thead>
-                        <tr>
-                            <th class="border-gray-200" scope="col">Transaction ID</th>
-                            <th class="border-gray-200" scope="col">Date</th>
-                            <th class="border-gray-200" scope="col">Amount</th>
-                            <th class="border-gray-200" scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#39201</td>
-                            <td>06/15/2021</td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-light text-dark">Pending</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="ms-4 small">
+               <a class="btn btn-sm btn-danger" onclick="removeAddr('{% url 'accounts:delete_info' pk=loc.pk %}')"><i class="bi bi-trash"></i> Delete</a>
             </div>
-        </div>
-    </div>
-    <script>
+         </div>
+         {% endfor %}
+      </div>
+   </div>
+   <!-- Billing history card-->
+   <div class="card mb-4">
+      <div class="card-header">Billing History</div>
+      <div class="card-body p-0">
+         <!-- Billing history table-->
+         <div class="table-responsive table-billing-history">
+            <table class="table mb-0">
+               <thead>
+                  <tr>
+                     <th class="border-gray-200" scope="col">Transaction ID</th>
+                     <th class="border-gray-200" scope="col">Date</th>
+                     <th class="border-gray-200" scope="col">Amount</th>
+                     <th class="border-gray-200" scope="col">Status</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>#39201</td>
+                     <td>06/15/2021</td>
+                     <td>$29.99</td>
+                     <td><span class="badge bg-light text-dark">Pending</span></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+   <script>
+      // Handle add credit card form submission
+      $('#creditCardForm').on('submit', function(event) {
+          event.preventDefault();
+          $.ajax({
+              url: $(this).attr('action'),
+              type: $(this).attr('method'),
+              data: $(this).serialize(),
+              success: function(response) {
+                  if (response.success) {
+                      $("#addCardModal").modal('hide');
+                      showAlert(response.message);
+                      $("#alertModal").on('hidden.bs.modal', function() {
+                          location.reload();
+                      });
+                  }                    
+                  else{
+                      $("#addCardModal").modal('hide');
+                      $('.errors').empty().css({'display': 'block'});
+                      $.each(response.errors, function(key, value) {
+                          $('.errors').append('<li>' + value.join(', ') + '</li>');
+                      }); 
+                  }
+              },
+              error: function(xhr, status, error) {
+                  $('.errors').text('An error occurred: ' + error);
+              }
+      });
+      });
+      // handle add delivery info form submission
+      $('#addressForm').on('submit', function(event) {
+          event.preventDefault();
+          $.ajax({
+              url: $(this).attr('action'),
+              type: $(this).attr('method'),
+              data: $(this).serialize(),
+              success: function(response) {
+                  if (response.success) {
+                      $("#addAddressModal").modal('hide');
+                      showAlert(response.message);
+                      $("#alertModal").on('hidden.bs.modal', function() {
+                          location.reload(); 
+                      });
+                  }                    
+                  else{
+                      $("#addAddressModal").modal('hide');
+                      $('.errors').empty().css({'display': 'block'});
+                      $.each(response.errors, function(key, value) {
+                          $('.errors').append('<li>' + value.join(', ') + '</li>');
+                      }); 
+                  }
+              },
+              error: function(xhr, status, error) {
+                  $('.errors').text('An error occurred: ' + error);
+              }
+      });
+      });
+        // remove card function
         function removeCard(url){
-            fetch(url, { method: 'GET' })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message){
-                    location.reload()
-                }
-            })
-        }
-        function removeAddr(url){
-            fetch(url, { method: 'GET' })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message){
-                    location.reload()
-                }
-            })
-        }
-    </script>
+              fetch(url, { method: 'GET' })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.message){
+                      showAlert(data.message);
+                      $("#alertModal").on('hidden.bs.modal', function() {
+                          location.reload(); 
+                      });
+                  }
+              })
+          }
+          // remove address function
+          function removeAddr(url){
+              fetch(url, { method: 'GET' })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.message){
+                      showAlert(data.message);
+                      $("#alertModal").on('hidden.bs.modal', function() {
+                          location.reload(); 
+                      });
+                  }
+              })
+          }
+   </script>
 </div>
 {% endblock content %}

@@ -11,73 +11,104 @@
             <a class="nav-link active" href="{% url 'accounts:security' %}">Security</a>
         </nav>
         <hr class="mt-0 mb-4">
+        {% include "inc/delete_account_modal.html" %}
         <div class="row">
             <div class="col-lg-8">
                 <!-- Change password card-->
                 <div class="card mb-4">
                     <div class="card-header">Change Password</div>
                     <div class="card-body">
-                        <form>
-                        {% include 'inc/error_handling.html' %}
-
+                        <div style="display:none;" class="errors alert alert-danger pb-2 pt-2" role="alert"></div>
+                        <form method="POST" id="updatePasswordForm" action="{% url 'accounts:update_password' %}">
+                        {% csrf_token %}
                             <!-- Form Group (current password)-->
                             <div class="mb-3">
                                 <label class="small mb-1" for="currentPassword">Current Password</label>
-                                <input class="form-control" id="currentPassword" type="password" placeholder="Enter current password">
+                                <input class="form-control" id="currentPassword" name="current_password" type="password" placeholder="Enter current password">
                             </div>
                             <!-- Form Group (new password)-->
                             <div class="mb-3">
                                 <label class="small mb-1" for="newPassword">New Password</label>
-                                <input class="form-control" id="newPassword" type="password" placeholder="Enter new password">
+                                <input class="form-control" id="newPassword" name="new_password" type="password" placeholder="Enter new password">
                             </div>
                             <!-- Form Group (confirm password)-->
                             <div class="mb-3">
                                 <label class="small mb-1" for="confirmPassword">Confirm Password</label>
-                                <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm new password">
+                                <input class="form-control" id="confirmPassword" name="new_password_confirm" type="password" placeholder="Confirm new password">
                             </div>
-                            <button class="btn btn-primary" type="button">Save</button>
-                        </form>
-                    </div>
-                </div>
-                <!-- Security preferences card-->
-                <div class="card mb-4">
-                    <div class="card-header">Security Preferences</div>
-                    <div class="card-body">
-                        <!-- Account privacy optinos-->
-                        <h5 class="mb-1">Account Privacy</h5>
-                        <p class="small text-muted">By setting your account to private, your profile information and posts will not be visible to users outside of your user groups.</p>
-                        <form>
-                            <div class="form-check">
-                                <input class="form-check-input" id="radioPrivacy1" type="radio" name="radioPrivacy" checked="">
-                                <label class="form-check-label" for="radioPrivacy1">Public (posts are available to all users)</label>
+                            <div class="mb-3">
+                                {{form.captcha}}    
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" id="radioPrivacy2" type="radio" name="radioPrivacy">
-                                <label class="form-check-label" for="radioPrivacy2">Private (posts are available to only users in your groups)</label>
-                            </div>
+                            <button class="btn btn-primary" type="submit">Chagne</button>
                         </form>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <!-- Two factor authentication card-->
-                <div class="card mb-4">
-                    <div class="card-header">Two-Factor Authentication</div>
-                    <div class="card-body">
-                        <p>Add another level of security to your account by enabling two-factor authentication. We will send you a text message to verify your login attempts on unrecognized devices and browsers.</p>
-                        <button type="button" class="btn btn-primary btn-sm">Enable</button>
-                        <button type="button" class="btn btn-secondary btn-sm" disabled>Disable</button>
-                    </div>
-                </div>
                 <!-- Delete account card-->
                 <div class="card mb-4">
                     <div class="card-header">Delete Account</div>
                     <div class="card-body">
                         <p>Deleting your account is a permanent action and cannot be undone. If you are sure you want to delete your account, select the button below.</p>
-                        <button class="btn btn-danger text-white" type="button">I understand, delete my account</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">I understand, delete my account</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        $('#updatePasswordForm').on('submit', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        
+                        showAlert(response.message);
+                        $("#alertModal").on('hidden.bs.modal', function() {
+                            location.reload();
+                        });
+                    }                    
+                    else{
+                        $('.errors').empty().css({'display': 'block'});
+                        $.each(response.errors, function(key, value) {
+                            $('.errors').append('<li>' + value.join(', ') + '</li>');
+                        }); 
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('.errors').text('An error occurred: ' + error);
+                }
+        });
+    });
+    
+    $('#deleteAccountForm').on('submit', function(event) {
+        event.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#deleteAccountModal').modal('hide');
+                    showAlert(response.message);
+                    $("#alertModal").on('hidden.bs.modal', function() {
+                        window.location.href = {% url 'accounts:login' %}
+                    });
+                }                    
+                else{
+                    $('.errors').empty().css({'display': 'block'});
+                    $.each(response.errors, function(key, value) {
+                        $('.errors').append('<li>' + value.join(', ') + '</li>');
+                    }); 
+                }
+            },
+            error: function(xhr, status, error) {
+                $('.errors').text('An error occurred: ' + error);
+            }
+    });
+});
+    </script>
 {%endblock%}
