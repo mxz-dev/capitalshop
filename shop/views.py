@@ -9,12 +9,13 @@ from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
-
+from accounts.models import DeliveryInfo, PaymentInfo
+from accounts.forms import DeliveryInfoForm, PaymentInfoForm
 
 def home_view(request):
     products = Products.objects.filter(in_stock=True).order_by('-created_at')[:4]
     posts = Post.objects.filter(is_published=True, publish_at__lt=now()).order_by('-created_at')[:3]
-    return render(request, 'index.html' , {"products":products, "posts":posts})
+    return render(request, 'index.html' , {"products":products, "posts":posts, })
 
 def shop_view(request):
     products = Products.objects.filter(in_stock=True).order_by('-created_at')
@@ -122,3 +123,12 @@ def update_cart_item_quantity(request, product, quantity):
         "message": "Quantity updated successfully.",
         "quantity": cart_item.quantity
     })
+
+@login_required
+def checkout_view(request):
+    user = request.user
+    addresses = DeliveryInfo.objects.filter(user=user)
+    payment_methods = PaymentInfo.objects.filter(user=user)
+    delivery_form = DeliveryInfoForm()
+    payment_form = PaymentInfoForm()
+    return render(request, 'shop/checkout.html', {"addresses":addresses, "payment_methods":payment_methods, "delivery_form":delivery_form, "payment_form":payment_form})

@@ -120,7 +120,7 @@ def add_credit_card(request):
                 card.save()
                 return JsonResponse({'success': True, 'message': 'Credit card added successfully.'})
             else:
-                return JsonResponse({'success': False, 'message': 'Duplicate card! Please try another one.'})
+                return JsonResponse({'success': False, 'errors':{'errors':['Duplicate card! Please try another one.']}})
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
     return JsonResponse({'success': False, 'message': 'Invalid request method.'})

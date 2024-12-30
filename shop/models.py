@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-
+from accounts.models import DeliveryInfo, PaymentInfo
 
 STATUS = (
     ("ordered", "ordered"),
@@ -111,3 +111,21 @@ class Contact(models.Model):
         return f'Message from {self.name}'
     class Meta:
         verbose_name_plural = "Contacts"
+
+class Checkout(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="checkouts")
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="checkouts")
+    order = models.ForeignKey(Orders, on_delete=models.CASCADE, related_name="checkouts")
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_status = models.CharField(max_length=20, choices=[
+        ('PENDING', 'Pending'),
+        ('PAID', 'Paid'),
+        ('FAILED', 'Failed')
+    ], default='PENDING')
+    delivery_info = models.ForeignKey(DeliveryInfo, on_delete=models.CASCADE, related_name="checkouts")
+    payment_info = models.ForeignKey(PaymentInfo, on_delete=models.CASCADE, related_name="checkouts")
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f'Checkout by {self.user_id.username}'
+    class Meta:
+        verbose_name_plural = "Checkouts"

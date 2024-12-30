@@ -12,5 +12,5 @@ urlpatterns = [
     path("cart/add/<int:product>/<int:quantity>", views.add_item_to_cart, name="add_to_cart"), # create
     path("cart/remove/<int:product>", views.remove_item, name="remove_from_cart"), # delete
     re_path(r'^cart/update/(?P<product>\d+)/(?P<quantity>-?\d+)/$', views.update_cart_item_quantity, name='update_cart_item_quantity'),
-
+    path("checkout", views.checkout_view, name="checkout"),
 ]
