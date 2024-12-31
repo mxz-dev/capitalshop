@@ -2,16 +2,18 @@
 {% load accounts_tags %}
 {% block content %}
 <div class="container my-5">
+    {% include 'inc/credit_card_form.html' %}
+    {% include 'inc/delivery_info_form.html' %}
     <h1 class="mb-4">Checkout</h1>
 
     <h4 class="mb-3">Almost there! Please provide your details below to continue shopping.</h4>
-
+    
     <!-- Error messages container -->
     <div class="errors alert alert-danger pb-2 pt-2" role="alert" style="display:none;"></div>
-
     <!-- Saved Address Selection -->
+    <form>
     <div class="mb-3">
-        <label class="form-label">Saved Address</label>
+        <label class="form-label">Saved Address or <a href="#" data-bs-toggle="modal" data-bs-target="#addAddressModal" >add a new</a></label>
         <select class="form-select" id="savedAddress" required>
             <option selected disabled value="">Choose an address...</option>
             {% for addr in addresses %}
@@ -19,22 +21,11 @@
             {% endfor %}
             <option value="new">Add a new address</option>
         </select>
-
-        <!-- New Address Fields -->
-        <div id="newAddressFields" class="mt-3 d-none">
-            <form action="{% url 'accounts:add_delivery_info' %}" id="addressForm" method="POST">
-                {% csrf_token %}
-                <input type="text" class="form-control mb-2" id="newAddress" name="address" placeholder="Enter new address">
-                <input type="tel" class="form-control mb-2" id="newTel" name="phone_number" placeholder="Telephone">
-                {{ delivery_form.captcha }}
-                <button type="submit" class="btn btn-primary mt-3">Save Address</button>
-            </form>
-        </div>
     </div>
 
     <!-- Saved Card Selection -->
     <div class="mb-3">
-        <label class="form-label">Saved Card</label>
+        <label class="form-label">Saved Card or <a href="#" data-bs-toggle="modal" data-bs-target="#addCardModal" >add a new</a></label>
         <select class="form-select" id="savedCard" required>
             <option selected disabled value="">Choose a card...</option>
             {% for card in payment_methods %}
@@ -42,24 +33,12 @@
             {% endfor %}
             <option value="new">Add a new card</option>
         </select>
-
-        <!-- New Card Fields -->
-        <div id="newCardFields" class="mt-3 d-none">
-            <form action="{% url 'accounts:add_credit_card' %}" method="POST" id="creditCardForm">
-                {% csrf_token %}
-                <input type="text" class="form-control mb-2" id="newCardNumber" name="card_number" placeholder="Card number">
-                <input type="date" class="form-control mb-2" id="newCardExpiry" name="expiry_date" placeholder="Expiration (MM/YY)">
-                <input style="-webkit-text-security: disc;text-security: disc;" type="text" class="form-control mb-1" id="newCardCVV" maxlength="4" name="cvv" placeholder="***" aria-label="cvv" aria-describedby="cvv">
-                {{ payment_form.captcha }}
-                <button type="submit" class="btn btn-primary mt-3">Save Card</button>
-            </form>
         </div>
     </div>
-
     <hr class="my-4">
-
     <!-- Complete Checkout Button -->
     <button class="w-100 btn btn-primary btn-lg" type="submit">Complete</button>
+</form>
 </div>
 
 <script>
@@ -83,51 +62,61 @@
         });
 
         // Handle new address form submission
-        $('#addressForm').on('submit', function(e) {
-            e.preventDefault();
+        $('#addressForm').on('submit', function(event) {
+            event.preventDefault();
             $.ajax({
-                type: 'POST',
                 url: $(this).attr('action'),
+                type: $(this).attr('method'),
                 data: $(this).serialize(),
                 success: function(response) {
                     if (response.success) {
-                        alert(response.message);
-                        location.reload(); // Reload the page to show the new address
-                    } else {
+                        $("#addAddressModal").modal('hide');
+                        showAlert(response.message);
+                        $("#alertModal").on('hidden.bs.modal', function() {
+                            location.reload(); 
+                        });
+                    }                    
+                    else{
+                        $("#addAddressModal").modal('hide');
                         $('.errors').empty().css({'display': 'block'});
                         $.each(response.errors, function(key, value) {
                             $('.errors').append('<li>' + value.join(', ') + '</li>');
-                        });
+                        }); 
                     }
                 },
                 error: function(xhr, status, error) {
                     $('.errors').text('An error occurred: ' + error);
                 }
-            });
+        });
         });
 
         // Handle new card form submission
-        $('#creditCardForm').on('submit', function(e) {
-            e.preventDefault();
+        $('#creditCardForm').on('submit', function(event) {
+            event.preventDefault();
             $.ajax({
-                type: 'POST',
                 url: $(this).attr('action'),
+                type: $(this).attr('method'),
                 data: $(this).serialize(),
                 success: function(response) {
                     if (response.success) {
-                        alert(response.message);
-                        location.reload(); // Reload the page to show the new card
-                    } else {
+                        $("#addCardModal").modal('hide');
+                        showAlert(response.message);
+                        $("#alertModal").on('hidden.bs.modal', function() {
+                            location.reload();
+                        });
+                    }                    
+                    else{
+                        $("#addCardModal").modal('hide');
                         $('.errors').empty().css({'display': 'block'});
                         $.each(response.errors, function(key, value) {
                             $('.errors').append('<li>' + value.join(', ') + '</li>');
-                        });
+                        }); 
                     }
                 },
                 error: function(xhr, status, error) {
                     $('.errors').text('An error occurred: ' + error);
                 }
-            });
+        });
         });
     });
 </script>
