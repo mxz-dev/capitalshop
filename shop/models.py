@@ -78,14 +78,14 @@ class Orders(models.Model):
         verbose_name_plural = "Orders"
 class OrderLine(models.Model):
     order = models.ForeignKey(Orders, on_delete=models.CASCADE, related_name="order_lines")
-    products = models.ManyToManyField(Products, related_name="order_lines")
+    products = models.ForeignKey(Products, null=True, on_delete=models.CASCADE,  related_name="order_lines")
     price = models.DecimalField(max_digits=6, decimal_places=2)
     quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     def line_total(self):
         return self.quantity * self.price_per_item
     def __str__(self):
-        return f"{self.product_name} x {self.quantity}"
+        return f"{self.products.name} x {self.quantity}"
         
 class Wishlist(models.Model):
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="wishlists")

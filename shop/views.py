@@ -1,6 +1,6 @@
 from django.shortcuts import render , get_object_or_404, redirect, HttpResponse
-from shop.models import Products, ProductCategories, Cart, CartItem
-from shop.forms import ContactForm
+from shop.models import Products, ProductCategories, Cart, CartItem, Orders, OrderLine
+from shop.forms import ContactForm, CheckoutForm
 from mag.models import Post
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -131,4 +131,30 @@ def checkout_view(request):
     payment_methods = PaymentInfo.objects.filter(user=user)
     delivery_form = DeliveryInfoForm()
     payment_form = PaymentInfoForm()
-    return render(request, 'shop/checkout.html', {"addresses":addresses, "payment_methods":payment_methods, "delivery_form":delivery_form, "payment_form":payment_form})
+    cart = get_object_or_404(Cart, created_by=user)
+    cart_item = CartItem.objects.filter(cart=cart)
+    total_price = 0
+    form = CheckoutForm()
+    if request.method == "POST":
+        form = CheckoutForm(request.POST)
+        if form.is_valid():
+            order = Orders.objects.create(user=user, total_amount=total_price, status="PAID")
+            for item in cart_item:
+                if item.quantity > 1:
+                    total_price += item.quantity * item.price 
+                else:
+                    total_price += item.price 
+                product = Products.objects.get(name=item.product)
+                OrderLine.objects.create(order=order, products=product, price=item.price, quantity=item.quantity)
+                cart_item.filter(product=product).delete()
+            checkout = form.save(commit=False)
+            checkout.user_id = user
+            checkout.cart = Cart.objects.get(created_by=user)
+            checkout.order = order
+            checkout.total_amount = total_price
+            checkout.payment_status = "PAID"
+            checkout.save()
+            messages.add_message(request, messages.SUCCESS, 'Order placed successfully.')
+            return redirect(reverse('shop:cart'))
+        
+    return render(request, 'shop/checkout.html', {"form":form,"addresses":addresses, "payment_methods":payment_methods, "delivery_form":delivery_form, "payment_form":payment_form})

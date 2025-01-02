@@ -83,14 +83,16 @@ Billing
                      <th class="border-gray-200" scope="col">Status</th>
                   </tr>
                </thead>
+               {% for transaction in transactions %}
                <tbody>
                   <tr>
-                     <td>#39201</td>
-                     <td>06/15/2021</td>
-                     <td>$29.99</td>
-                     <td><span class="badge bg-light text-dark">Pending</span></td>
+                     <td>{{transaction.id}}</td>
+                     <td>{{transaction.created_at|date:"Y/m/d"}}</td>
+                     <td>${{transaction.total_amount}}</td>
+                     <td><span class="badge bg-light text-dark">{{transaction.payment_status}}</span></td>
                   </tr>
                </tbody>
+               {%endfor%}
             </table>
          </div>
       </div>
@@ -115,8 +117,11 @@ Billing
                       $("#addCardModal").modal('hide');
                       $('.errors').empty().css({'display': 'block'});
                       $.each(response.errors, function(key, value) {
-                          $('.errors').append('<li>' + value.join(', ') + '</li>');
+                          $('.errors').append('<li>' + value.join(', ') + ' <a href="javascript:location.reload()">reload</a></li>');
                       }); 
+                      setTimeout(function() {
+                        location.reload();
+                    }, 8000);
                   }
               },
               error: function(xhr, status, error) {
@@ -143,8 +148,11 @@ Billing
                       $("#addAddressModal").modal('hide');
                       $('.errors').empty().css({'display': 'block'});
                       $.each(response.errors, function(key, value) {
-                          $('.errors').append('<li>' + value.join(', ') + '</li>');
+                          $('.errors').append('<li>' + value.join(', ') + ' <a href="javascript:location.reload()">reload</a></li>');
                       }); 
+                      setTimeout(function() {
+                        location.reload();
+                    }, 8000);
                   }
               },
               error: function(xhr, status, error) {

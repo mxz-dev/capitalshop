@@ -14,7 +14,7 @@ from django.urls import reverse
 from accounts.forms import CustomAuthenticationForm, UpdateUserPasswordForm, DeliveryInfoForm, CustomUserCreationForm, UpdateProfileForm, PaymentInfoForm
 from accounts.tokens import account_activation_token
 from accounts.models import PaymentInfo, DeliveryInfo
-from shop.models import Cart
+from shop.models import Cart, Checkout
 
 def login_view(request):
     if request.user.is_authenticated != True: 
@@ -98,13 +98,15 @@ def update_profile_view(request):
 def billing_view(request):
     cards = PaymentInfo.objects.filter(user=request.user)
     locations = DeliveryInfo.objects.filter(user=request.user)
+    transactions = Checkout.objects.filter(user_id=request.user)
     payment_form = PaymentInfoForm()
     delivery_form = DeliveryInfoForm()
     return render(request, 'accounts/profile/billing_details.html', {
         'payment_form':payment_form,
         'delivery_form':delivery_form,
         'cards':cards,
-        'locations':locations
+        'locations':locations,
+        'transactions':transactions
         })
 
 @login_required
